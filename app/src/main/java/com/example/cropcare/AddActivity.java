@@ -31,12 +31,5 @@ public class AddActivity extends AppCompatActivity {
         DataBaseHelper dataBaseHelper = new DataBaseHelper(AddActivity.this);
         etName = findViewById(R.id.etName);
         btnOk = findViewById(R.id.btnOk);
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //dataBaseHelper.addData("some data");
-                dataBaseHelper.getDataList();
-            }
-        });
     }
 }
