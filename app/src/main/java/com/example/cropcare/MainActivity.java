@@ -10,12 +10,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.cropcare.Model.RVModelCropInfoModel;
+import com.example.cropcare.recycler.AdapterCrops;
 
-    RecyclerView recyclerView;
-    Button button;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +32,13 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        recyclerView = findViewById(R.id.rv);
-        button = findViewById(R.id.btnAdd);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                startActivity(intent);
-            }
-        });
+        List<RVModelCropInfoModel> cropInfoList = new ArrayList<>();
+        cropInfoList.add(new RVModelCropInfoModel("opa", "wit"));
+
+
+        RecyclerView recyclerView = findViewById(R.id.rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new AdapterCrops(getApplicationContext(), cropInfoList));
 
     }
 }
