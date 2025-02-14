@@ -28,7 +28,6 @@ public class AddActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(AddActivity.this);
         etName = findViewById(R.id.etCropName);
         btnOk = findViewById(R.id.btnOk);
     }

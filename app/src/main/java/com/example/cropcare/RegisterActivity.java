@@ -13,13 +13,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cropcare.Database.DataBaseHelper;
+import com.example.cropcare.Database.UserDatabaseHelper;
 import com.example.cropcare.Model.UserModel;
 import com.example.cropcare.helper.Validator;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etUsername, etPassword;
-    private DataBaseHelper dbHelper;
+    private UserDatabaseHelper userDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-        dbHelper = new DataBaseHelper(this);
+        userDatabaseHelper = new UserDatabaseHelper(this);
 
     }
 
@@ -43,10 +44,10 @@ public class RegisterActivity extends AppCompatActivity {
         String username = etUsername.getText().toString().trim().toLowerCase();
         String password = etPassword.getText().toString().trim();
 
-        if(!Validator.isUserInputValid(username, password, this, dbHelper)) return;
-        if (!Validator.isUsernameAvailable(username, this, dbHelper)) return;
+        if(!Validator.isUserInputValid(username, password, this, userDatabaseHelper)) return;
+        if (!Validator.isUsernameAvailable(username, this, userDatabaseHelper)) return;
 
-        dbHelper.addNewUser(username, password, true);
+        userDatabaseHelper.addUser(username, password, true);
         Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
     }
 
