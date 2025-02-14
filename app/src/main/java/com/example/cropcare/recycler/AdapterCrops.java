@@ -2,12 +2,11 @@ package com.example.cropcare.recycler;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cropcare.Model.RVModelCropInfoModel;
+import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.R;
 
 import java.util.List;
@@ -16,9 +15,9 @@ import java.util.List;
 public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
     Context context;
-    List<RVModelCropInfoModel> cropInfoList;
+    List<CropModel> cropInfoList;
 
-    public AdapterCrops(Context context, List<RVModelCropInfoModel> cropInfoList){
+    public AdapterCrops(Context context, List<CropModel> cropInfoList){
         this.context = context;
         this.cropInfoList = cropInfoList;
     }
@@ -31,8 +30,9 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCrops holder, int position) {
-        holder.tvCropName.setText(cropInfoList.get(position).getCropName());
-
+        String date = "Date: " + cropInfoList.get(position).getDate();
+        holder.tvCropName.setText(cropInfoList.get(position).getName());
+        holder.tvCropDate.setText(date);
     }
 
     @Override

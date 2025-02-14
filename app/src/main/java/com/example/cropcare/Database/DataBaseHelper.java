@@ -10,21 +10,25 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.cropcare.Database.Tables.CropTable;
+import com.example.cropcare.Database.Tables.IDatabaseTable;
+import com.example.cropcare.Database.Tables.UserTable;
 import com.example.cropcare.Model.UserModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private Context context;
     public static final String DATABASE_NAME = "myDataBase";
-    public static final int DATABASE_VERSION = 2;
-    public static final String COL_ID = "id";
-    public static final String TABLE_USER = "User";
-    public static final String COL_USERNAME = "username";
-    public static final String COL_PASSWORD = "password";
-    public static final String COL_ADMIN = "admin";
+    public static final int DATABASE_VERSION = 3;
+
+    private final List<IDatabaseTable> tables = Arrays.asList(
+            new UserTable(),
+            new CropTable()
+    );
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -32,44 +36,41 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE " + TABLE_USER + " (" +
-                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_USERNAME + " TEXT NOT NULL, " +
-                COL_PASSWORD + " TEXT NOT NULL, " +
-                COL_ADMIN + " INTEGER NOT NULL DEFAULT 0);";
-        db.execSQL(query);
+        for(IDatabaseTable table : tables){
+            db.execSQL(table.createTableQuery());
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2) {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
-            onCreate(db);
+        for (IDatabaseTable table : tables) {
+            db.execSQL("DROP TABLE IF EXISTS " + table.getTableName());
         }
+        onCreate(db);
     }
 
     public void addNewUser(String username, String password, boolean isAdmin) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COL_USERNAME, username);
-        cv.put(COL_PASSWORD, password);
-        cv.put(COL_ADMIN, isAdmin);
-        db.insert(TABLE_USER, null, cv);
+        cv.put(UserTable.COL_USERNAME, username);
+        cv.put(UserTable.COL_PASSWORD, password);
+        cv.put(UserTable.COL_ADMIN, isAdmin);
+        db.insert(UserTable.TABLE_NAME, null, cv);
         db.close();
     }
 
     public List<UserModel> getAllUsers() {
         List<UserModel> userList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_USER;
+        String query = "SELECT * FROM " + UserTable.TABLE_NAME;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                int idIndex = cursor.getColumnIndex(COL_ID);
-                int usernameIndex = cursor.getColumnIndex(COL_USERNAME);
-                int passwordIndex = cursor.getColumnIndex(COL_PASSWORD);
-                int adminIndex = cursor.getColumnIndex(COL_ADMIN);
+                int idIndex = cursor.getColumnIndex(UserTable.COL_ID);
+                int usernameIndex = cursor.getColumnIndex(UserTable.COL_USERNAME);
+                int passwordIndex = cursor.getColumnIndex(UserTable.COL_PASSWORD);
+                int adminIndex = cursor.getColumnIndex(UserTable.COL_ADMIN);
 
                 if (idIndex != -1 && usernameIndex != -1 && passwordIndex != -1) {
                     int id = cursor.getInt(idIndex);
@@ -89,14 +90,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public UserModel getUserByUsername(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_USER + " WHERE " + COL_USERNAME + " = ?";
+        String query = "SELECT * FROM " + UserTable.TABLE_NAME + " WHERE " + UserTable.COL_USERNAME + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{username});
 
         if (cursor != null && cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(COL_ID);
-            int usernameIndex = cursor.getColumnIndex(COL_USERNAME);
-            int passwordIndex = cursor.getColumnIndex(COL_PASSWORD);
-            int adminIndex = cursor.getColumnIndex(COL_ADMIN);
+            int idIndex = cursor.getColumnIndex(UserTable.COL_ID);
+            int usernameIndex = cursor.getColumnIndex(UserTable.COL_USERNAME);
+            int passwordIndex = cursor.getColumnIndex(UserTable.COL_PASSWORD);
+            int adminIndex = cursor.getColumnIndex(UserTable.COL_ADMIN);
 
             if (idIndex != -1 && usernameIndex != -1 && passwordIndex != -1) {
                 int id = cursor.getInt(idIndex);
@@ -116,7 +117,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public boolean isPasswordValid(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_USER + " WHERE " + COL_USERNAME + " = ? AND " + COL_PASSWORD + " = ?";
+        String query = "SELECT * FROM " + UserTable.TABLE_NAME + " WHERE " + UserTable.COL_USERNAME + " = ? AND " + UserTable.COL_PASSWORD + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{username, password});
 
         boolean isAuthenticated = cursor.getCount() > 0;

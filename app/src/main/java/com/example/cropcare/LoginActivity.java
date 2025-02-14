@@ -39,15 +39,16 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        //checkLogin();
+
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
 
         dbHelper = new DataBaseHelper(this);
     }
 
-    public void navToRegister(View view) {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+    public void checkLogin(){
+        navigateToHomePage();
     }
 
     public void login(View view) {
@@ -58,10 +59,21 @@ public class LoginActivity extends AppCompatActivity {
         if (user == null) Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show();
         else
             if(!Objects.equals(user.getPassword(), password)) Toast.makeText(this, "Invalid password", Toast.LENGTH_LONG).show();
-        else{
-                Log.i(TAG, "Logged in user: " + user.toString());
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+        else
+        {
+            Log.i(TAG, "Logged in user: " + user.toString());
+            navigateToHomePage();
+        }
     }
+
+    private void navigateToHomePage(){
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void navigateToRegister(View view) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
 }

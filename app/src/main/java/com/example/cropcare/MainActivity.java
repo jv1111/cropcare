@@ -1,9 +1,6 @@
 package com.example.cropcare;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cropcare.Model.RVModelCropInfoModel;
+import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.recycler.AdapterCrops;
 
 import java.util.ArrayList;
@@ -32,13 +29,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        List<RVModelCropInfoModel> cropInfoList = new ArrayList<>();
-        cropInfoList.add(new RVModelCropInfoModel("opa", "wit"));
-
+        List<CropModel> cropInfoList = new ArrayList<>();
+        cropInfoList.add(new CropModel(1,"jan 1", "fcrop"));
+        cropInfoList.add(new CropModel(1,"jan 2", "scrop"));
 
         RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new AdapterCrops(getApplicationContext(), cropInfoList));
-
     }
 }

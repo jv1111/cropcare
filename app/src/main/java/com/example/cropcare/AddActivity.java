@@ -29,7 +29,7 @@ public class AddActivity extends AppCompatActivity {
             return insets;
         });
         DataBaseHelper dataBaseHelper = new DataBaseHelper(AddActivity.this);
-        etName = findViewById(R.id.etName);
+        etName = findViewById(R.id.etCropName);
         btnOk = findViewById(R.id.btnOk);
     }
 }
