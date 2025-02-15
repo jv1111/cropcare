@@ -3,6 +3,7 @@ package com.example.cropcare.Database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.cropcare.Database.Tables.CropTable;
 import com.example.cropcare.Database.Tables.IDatabaseTable;
@@ -38,7 +39,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         for (IDatabaseTable table : tables) {
-            db.execSQL(table.createTableQuery());
+            String query = table.createTableQuery();
+            Log.i("myTag", "Creating table with query: " + query);
+            db.execSQL(query);
         }
     }
 
