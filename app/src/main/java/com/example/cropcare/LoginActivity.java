@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        //checkLogin();
+        checkLogin();
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
