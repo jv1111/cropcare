@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
     private Button btnRecord;
+    private RecyclerView rv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
