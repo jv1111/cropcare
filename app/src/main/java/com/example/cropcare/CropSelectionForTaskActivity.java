@@ -1,5 +1,6 @@
 package com.example.cropcare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,7 +18,7 @@ import com.example.cropcare.recycler.AdapterCropSelection;
 
 import java.util.List;
 
-public class CropSelectionForTaskActivity extends AppCompatActivity {
+public class CropSelectionForTaskActivity extends AppCompatActivity implements AdapterCropSelection.IOnSelection {
 
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
@@ -40,7 +41,7 @@ public class CropSelectionForTaskActivity extends AppCompatActivity {
     public void setupRecyclerView(List<CropModel> cropInfoList){
         RecyclerView recyclerView = findViewById(R.id.rvCropSelectionForTaskCreation);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new AdapterCropSelection(getApplicationContext(), cropInfoList));
+        recyclerView.setAdapter(new AdapterCropSelection(getApplicationContext(), cropInfoList, this));
     }
 
     public List<CropModel> getAllCrops(){
@@ -50,5 +51,15 @@ public class CropSelectionForTaskActivity extends AppCompatActivity {
             Log.i(TAG, crop.getName());
         }
         return cropList;
+    }
+
+    @Override
+    public void onSelect(String date, String cropName, int id) {
+        Log.i("myTag", "selected new: " + cropName);
+        Intent intent = new Intent(CropSelectionForTaskActivity.this, AddNewTaskActivity.class);
+        intent.putExtra("date", date);
+        intent.putExtra("cropName", cropName);
+        intent.putExtra("id", id);
+        startActivity(intent);
     }
 }

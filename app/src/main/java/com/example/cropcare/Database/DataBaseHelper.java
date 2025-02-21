@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.cropcare.Database.Tables.CropTable;
 import com.example.cropcare.Database.Tables.IDatabaseTable;
+import com.example.cropcare.Database.Tables.TaskTable;
 import com.example.cropcare.Database.Tables.UserTable;
 
 import java.util.Arrays;
@@ -20,7 +21,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private final List<IDatabaseTable> tables = Arrays.asList(
             new UserTable(),
-            new CropTable()
+            new CropTable(),
+            new TaskTable()
     );
 
     // Private constructor to prevent instantiation

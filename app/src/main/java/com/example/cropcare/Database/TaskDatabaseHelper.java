@@ -19,13 +19,16 @@ public class TaskDatabaseHelper {
         dbHelper = DataBaseHelper.getInstance(context);
     }
 
-    public void addNewTask(String date, int cropId, String cropName, String note) {
+    public void addNewTask(String cropName, int cropId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(TaskTable.COL_DATE, date);
         values.put(TaskTable.COL_CROP_ID, cropId);
         values.put(TaskTable.COL_CROP_NAME, cropName);
         values.put(TaskTable.COL_NOTE, note);
+        values.put(TaskTable.COL_START_TIME, startTime);
+        values.put(TaskTable.COL_END_TIME, endTime);
+        values.put(TaskTable.COL_IS_REPEAT, isRepeat ? 1 : 0);
+        values.put(TaskTable.COL_REPEAT_EVERY, repeatEveryDays);
 
         long result = db.insert(TaskTable.TABLE_NAME, null, values);
         if (result == -1) {
@@ -46,10 +49,13 @@ public class TaskDatabaseHelper {
             do {
                 TaskModel task = new TaskModel(
                         cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_DATE)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE))
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_START_TIME)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_END_TIME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_IS_REPEAT)) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_REPEAT_EVERY))
                 );
                 taskList.add(task);
             } while (cursor.moveToNext());
@@ -58,4 +64,5 @@ public class TaskDatabaseHelper {
         db.close();
         return taskList;
     }
+
 }

@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        //checkLogin();
+        checkLogin();
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
     private void navigateToHomePage(){
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void navigateToRegister() {

@@ -17,10 +17,16 @@ public class AdapterCropSelection extends RecyclerView.Adapter<ViewHolderCrops> 
 
     Context context;
     List<CropModel> cropInfoList;
+    private IOnSelection selectionCallback;
 
-    public AdapterCropSelection(Context context, List<CropModel> cropInfoList) {
+    public interface IOnSelection{
+        void onSelect(String date, String cropName, int id);
+    }
+
+    public AdapterCropSelection(Context context, List<CropModel> cropInfoList, IOnSelection selectionCallback) {
         this.context = context;
         this.cropInfoList = cropInfoList;
+        this.selectionCallback = selectionCallback;
     }
 
     @NonNull
@@ -32,11 +38,14 @@ public class AdapterCropSelection extends RecyclerView.Adapter<ViewHolderCrops> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCrops holder, int position) {
         String date = "Date: " + cropInfoList.get(position).getDate();
+        String cropName = cropInfoList.get(position).getName();
+        int id = cropInfoList.get(position).getId();
+
         holder.tvCropName.setText(cropInfoList.get(position).getName());
         holder.tvCropDate.setText(date);
 
         holder.itemView.setOnClickListener(v ->
-                Toast.makeText(context, "Selected Crop: " + cropInfoList.get(position).getName(), Toast.LENGTH_SHORT).show()
+                selectionCallback.onSelect(date, cropName, id)
         );
     }
 
