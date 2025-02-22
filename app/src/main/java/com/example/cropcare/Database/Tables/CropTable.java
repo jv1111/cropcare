@@ -11,7 +11,7 @@ public class CropTable implements IDatabaseTable {
         return "CREATE TABLE " + TABLE_NAME + " (" +
                 COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COL_NAME + " TEXT NOT NULL, " +
-                COL_DATE + " TEXT NOT NULL);";
+                COL_DATE + " INTEGER NOT NULL);";
     }
 
     @Override

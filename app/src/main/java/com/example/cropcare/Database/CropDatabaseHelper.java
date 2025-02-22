@@ -45,7 +45,7 @@ public class CropDatabaseHelper {
             do {
                 CropModel crop = new CropModel(
                         cursor.getInt(cursor.getColumnIndexOrThrow(CropTable.COL_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(CropTable.COL_DATE)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(CropTable.COL_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(CropTable.COL_NAME))
                 );
                 cropList.add(crop);

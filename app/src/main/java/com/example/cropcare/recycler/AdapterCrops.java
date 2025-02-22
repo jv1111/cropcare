@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.R;
+import com.example.cropcare.helper.TimeConverter;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCrops holder, int position) {
-        String date = "Date Created: " + cropInfoList.get(position).getDate();
+        String date = "Date Created: " + TimeConverter.convertMillisToDateTime(cropInfoList.get(position).getDate());
         int id = cropInfoList.get(position).getId();
         String cropName = cropInfoList.get(position).getName();
         holder.tvCropName.setText(cropName);

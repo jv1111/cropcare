@@ -2,10 +2,10 @@ package com.example.cropcare.Model;
 
 public class CropModel {
     private int id;
-    private String date;
+    private long date;
     private String name;
 
-    public CropModel(int id, String date, String name) {
+    public CropModel(int id, long date, String name) {
         this.id = id;
         this.date = date;
         this.name = name;
@@ -15,7 +15,7 @@ public class CropModel {
         return id;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
