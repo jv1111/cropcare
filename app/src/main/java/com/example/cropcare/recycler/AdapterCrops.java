@@ -16,10 +16,17 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
     Context context;
     List<CropModel> cropInfoList;
+    private ICropListControlCB cb;
 
-    public AdapterCrops(Context context, List<CropModel> cropInfoList){
+    public interface ICropListControlCB{
+        void onSelect(int id, String cropName);
+        void onDelete(int id);
+    }
+
+    public AdapterCrops(Context context, List<CropModel> cropInfoList, ICropListControlCB cb){
         this.context = context;
         this.cropInfoList = cropInfoList;
+        this.cb = cb;
     }
 
     @NonNull
@@ -30,9 +37,18 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCrops holder, int position) {
-        String date = "Date: " + cropInfoList.get(position).getDate();
-        holder.tvCropName.setText(cropInfoList.get(position).getName());
+        String date = "Date Created: " + cropInfoList.get(position).getDate();
+        int id = cropInfoList.get(position).getId();
+        String cropName = cropInfoList.get(position).getName();
+        holder.tvCropName.setText(cropName);
         holder.tvCropDate.setText(date);
+
+        holder.btnDelete.setOnClickListener(v ->{
+            cb.onDelete(id);
+        });
+        holder.itemView.setOnClickListener(v -> {
+            cb.onSelect(id, cropName);
+        });
     }
 
     @Override

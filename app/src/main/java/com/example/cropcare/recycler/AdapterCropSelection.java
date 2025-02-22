@@ -32,7 +32,7 @@ public class AdapterCropSelection extends RecyclerView.Adapter<ViewHolderCrops> 
     @NonNull
     @Override
     public ViewHolderCrops onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolderCrops(LayoutInflater.from(context).inflate(R.layout.rec_item_crop, parent, false));
+        return new ViewHolderCrops(LayoutInflater.from(context).inflate(R.layout.rec_item_selection_crop, parent, false));
     }
 
     @Override

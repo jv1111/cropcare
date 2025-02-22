@@ -21,7 +21,7 @@ import com.example.cropcare.recycler.AdapterCrops;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterCrops.ICropListControlCB {
 
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public void setupRecyclerView(List<CropModel> cropInfoList){
         RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new AdapterCrops(getApplicationContext(), cropInfoList));
+        recyclerView.setAdapter(new AdapterCrops(getApplicationContext(), cropInfoList, this));
     }
 
     public List<CropModel> getAllCrops(){
@@ -70,5 +70,18 @@ public class MainActivity extends AppCompatActivity {
     public void navigateToAddNew(View view) {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSelect(int id, String cropName) {
+        Intent intent = new Intent(MainActivity.this, TaskSelectionActivity.class);
+        intent.putExtra("cropId", id);
+        intent.putExtra("cropName", cropName);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDelete(int id) {
+
     }
 }

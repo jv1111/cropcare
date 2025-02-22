@@ -10,16 +10,17 @@ import com.example.cropcare.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class ViewHolderCrops extends RecyclerView.ViewHolder {
-    TextView tvCropName;
-    TextView tvCropDate;
+public class ViewHolderTasks extends RecyclerView.ViewHolder {
+    TextView tvTaskDate;
+    TextView tvTaskNote;
+    TextView tvEvery;
     Button btnDelete;
 
-    public ViewHolderCrops(@NotNull View itemView ){
+    public ViewHolderTasks(@NotNull View itemView) {
         super(itemView);
-        tvCropName = itemView.findViewById(R.id.tvCropName);
-        tvCropDate = itemView.findViewById(R.id.tvCropDate);
+        tvTaskDate = itemView.findViewById(R.id.tvTaskDate);
+        tvTaskNote = itemView.findViewById(R.id.tvTaskNote);
+        tvEvery = itemView.findViewById(R.id.tvEvery);
         btnDelete = itemView.findViewById(R.id.btnDelete);
     }
-
 }
