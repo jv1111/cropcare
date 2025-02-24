@@ -18,6 +18,7 @@ import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.MainActivity;
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.helper.TimeConverter;
+import com.example.cropcare.receivers.AlarmReceiver;
 
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +28,8 @@ public class NotifierService extends Service {
     private static final int NOTIFICATION_ID = 1;
     public static boolean isRunning = false;
     private final Handler handler = new Handler();
+    private boolean isRinging = false;
+    private PendingIntent pendingIntent;
 
     @Nullable
     @Override
@@ -67,13 +70,27 @@ public class NotifierService extends Service {
         startForeground(NOTIFICATION_ID, notification);
     }
 
-    private void updateNotification(String text) {
+    private void updateNotification(String text, int currentTaskId) {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        if (pendingIntent == null) {
+            notificationIntent.putExtra("from_notification", true);
+            notificationIntent.putExtra("taskId", currentTaskId);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            pendingIntent = PendingIntent.getActivity(
+                    this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+        }
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Service Running")
                 .setContentText(text)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setOnlyAlertOnce(true) // Prevents re-triggering the notification pop-up
                 .setOngoing(true) // Keeps it as a persistent notification
+                .setContentIntent(pendingIntent)
                 .build();
         NotificationManager manager = getSystemService(NotificationManager.class);
         if (manager != null) manager.notify(NOTIFICATION_ID, notification);
@@ -87,6 +104,9 @@ public class NotifierService extends Service {
         for (TaskModel task : listOfTask) {
             Log.i("myTag", "Upcoming Task: " + task.getCropName() + ", Start: " + TimeConverter.convertMillisToDateTime(task.getStartTime()));
         }
+
+        AlarmReceiver.setAlarmMillis(this, listOfTask.get(0).getStartTime());
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -96,15 +116,18 @@ public class NotifierService extends Service {
                     if (listOfTask.isEmpty()){
                         notificationText = "There is not upcoming task";
                     }else{
-                        long firstTaskTime = listOfTask.get(0).getStartTime();
-                        long timeDiff = firstTaskTime - currentMillis;
-                        Log.i("TaskScheduler", "CurrentMillis: " + TimeConverter.convertMillisToDateTime(currentMillis) +
-                                ", FirstTaskTime: " + TimeConverter.convertMillisToDateTime(firstTaskTime) +
-                                ", TimeDiff: " + TimeConverter.convertMillisToCountdown(timeDiff));
-                        notificationText = "Next Task in: " + TimeConverter.convertMillisToCountdown(timeDiff);
-                        //TODO add an alarm if tasksTime == current
+                        if(isRinging){
+                            notificationText = listOfTask.get(0).getCropName() + "note: " + listOfTask.get(0).getNote();
+                        }else{
+                            long firstTaskTime = listOfTask.get(0).getStartTime();
+                            long timeDiff = firstTaskTime - currentMillis;
+                            notificationText = "Next Task in: " + TimeConverter.convertMillisToCountdown(timeDiff);
+                            if(timeDiff<=0){
+                                isRinging = true;
+                            }
+                        }
                     }
-                    updateNotification(notificationText);
+                    updateNotification(notificationText, listOfTask.get(0).getId());
                     handler.postDelayed(this, 1000); // Schedule next execution after 1s
                 }
             }

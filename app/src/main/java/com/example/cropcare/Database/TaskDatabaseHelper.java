@@ -96,4 +96,11 @@ public class TaskDatabaseHelper {
         return taskList;
     }
 
+    public void deleteAllTasks() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int deletedRows = db.delete(TaskTable.TABLE_NAME, null, null);
+        Log.i("myTag", "Deleted " + deletedRows + " tasks.");
+        db.close();
+    }
+
 }
