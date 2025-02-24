@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropcare.Database.CropDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
+import com.example.cropcare.helper.Permissions;
 import com.example.cropcare.recycler.AdapterCrops;
+import com.example.cropcare.services.NotifierService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +40,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Permissions.checkNotification(this);
         cropDbHelper = new CropDatabaseHelper(this);
         btnRecord = findViewById(R.id.btnRecords);
+        startDateReaderService();
         setupButtons();
 
         setupRecyclerView(getAllCrops());
@@ -51,13 +56,13 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         });
     }
 
-    public void setupRecyclerView(List<CropModel> cropInfoList){
+    private void setupRecyclerView(List<CropModel> cropInfoList){
         RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new AdapterCrops(getApplicationContext(), cropInfoList, this));
     }
 
-    public List<CropModel> getAllCrops(){
+    private List<CropModel> getAllCrops(){
         List<CropModel> cropList = cropDbHelper.getAllCrops();
         Log.i("myTag", "got the crops: crop count = " + cropList.size());
         for (CropModel crop: cropList
@@ -67,9 +72,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         return cropList;
     }
 
-    public void navigateToAddNew(View view) {
-        Intent intent = new Intent(MainActivity.this, AddActivity.class);
-        startActivity(intent);
+    private void startDateReaderService(){
+        if(!NotifierService.isRunning){
+            Log.i("myTag", "starting the service");
+            startService(new Intent(this, NotifierService.class));
+        }
     }
 
     @Override
@@ -83,5 +90,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     @Override
     public void onDelete(int id) {
 
+    }
+
+    public void navigateToAddNew(View view) {
+        Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        startActivity(intent);
     }
 }

@@ -65,4 +65,35 @@ public class TaskDatabaseHelper {
         return taskList;
     }
 
+    public List<TaskModel> getUpcomingTasks() {
+        Log.i("myTag", "getting upcoming tasks...");
+        List<TaskModel> taskList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        long currentMillis = System.currentTimeMillis();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TaskTable.TABLE_NAME + " WHERE " + TaskTable.COL_START_TIME + " > ? ORDER BY " + TaskTable.COL_START_TIME + " ASC",
+                new String[]{String.valueOf(currentMillis)}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                TaskModel task = new TaskModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_START_TIME)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_END_TIME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_IS_REPEAT)) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_REPEAT_EVERY))
+                );
+                taskList.add(task);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return taskList;
+    }
+
 }
