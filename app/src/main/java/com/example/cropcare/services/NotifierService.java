@@ -17,6 +17,7 @@ import androidx.core.app.NotificationCompat;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.MainActivity;
 import com.example.cropcare.Model.TaskModel;
+import com.example.cropcare.TaskActivity;
 import com.example.cropcare.helper.TimeConverter;
 import com.example.cropcare.receivers.AlarmReceiver;
 
@@ -71,7 +72,7 @@ public class NotifierService extends Service {
     }
 
     private void updateNotification(String text, int currentTaskId) {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, TaskActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         if (pendingIntent == null) {

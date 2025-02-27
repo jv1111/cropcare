@@ -61,35 +61,32 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     }
 
-    private void test(){
+    private void test() {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(this);
         CropDatabaseHelper cdh = new CropDatabaseHelper(this);
+
         List<CropModel> cropList = cdh.getAllCrops();
+        if (cropList.isEmpty()) {
+            cdh.addNewCrop("Default Crop");
+            cropList = cdh.getAllCrops();
+        }
+
         CropModel crop = cropList.get(0);
-        Log.i("myTag test", "id: " + cropList.get(0).getId());
-        Log.i("myTag test", "name: " + cropList.get(0).getName());
+        Log.i("myTag test", "id: " + crop.getId());
+        Log.i("myTag test", "name: " + crop.getName());
+
         tdh.deleteAllTasks();
 
         long currentMillis = System.currentTimeMillis();
-        long newMillis = currentMillis + 10000;
+        long startMillis = currentMillis + 10000;
         long oneMonthPlus = currentMillis + (30L * 24 * 60 * 60 * 1000);
-        tdh.addNewTask(crop.getName(), crop.getId(), "hey", newMillis, oneMonthPlus, true, 1);
-        newMillis += 300000;
-        tdh.addNewTask(crop.getName(), crop.getId(), "Hoo", newMillis, oneMonthPlus, true, 1);
-        newMillis += 720000;
-        tdh.addNewTask(crop.getName(), crop.getId(), "Haa", newMillis, oneMonthPlus, true, 1);
-        //generate a code that will add  a new tasks that have a starTime 10 seconds
 
-        if (getIntent().getExtras() != null) {
-            Log.d("NotificationTap", "Notification was tapped");
-            AlarmReceiver.stopAlarm();
-            int taskId = getIntent().getIntExtra("taskId", -1);
-            Log.d("NotificationTap", "Received taskId: " + taskId);
-            //TODO ADD THE TASK ID AS EXTRA
-            //TODO DELETE OR UPDATE THE TASK IF ISREPEAT TRUE
-            //TODO RESTART THE SERVICE TO START A NEW TIMER
+        for (int i = 0; i < 3; i++) {
+            tdh.addNewTask(crop.getName(), crop.getId(), "Task " + (i + 1), startMillis, oneMonthPlus, true, 1);
+            startMillis += 300000;
         }
     }
+
 
     private void setupButtons(){
         btnRecord.setOnClickListener(v -> {

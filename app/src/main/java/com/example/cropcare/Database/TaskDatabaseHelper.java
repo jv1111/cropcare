@@ -103,4 +103,31 @@ public class TaskDatabaseHelper {
         db.close();
     }
 
+    public TaskModel getOneTaskById(int taskId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        TaskModel task = null;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TaskTable.TABLE_NAME + " WHERE " + TaskTable.COL_ID + " = ?",
+                new String[]{String.valueOf(taskId)}
+        );
+
+        if (cursor.moveToFirst()) {
+            task = new TaskModel(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_START_TIME)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_END_TIME)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_IS_REPEAT)) == 1,
+                    cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_REPEAT_EVERY))
+            );
+        }
+        cursor.close();
+        db.close();
+        return task;
+    }
+
+
 }
