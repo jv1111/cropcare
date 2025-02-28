@@ -2,6 +2,7 @@ package com.example.cropcare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,8 @@ import com.example.cropcare.receivers.AlarmReceiver;
 public class TaskActivity extends AppCompatActivity {
 
     private int taskId = 0;
+
+    private TaskModel task;
 
     TextView tvCropname, tvDate, tvNote;
     Button btnOk;
@@ -48,12 +51,26 @@ public class TaskActivity extends AppCompatActivity {
         AlarmReceiver.stopAlarm();
 
         displayData();
+        nextDate();
+        //TODO UPDATE THE TASK IF IT HAS A REPEAT VALUE
+        //TODO RESTART THE SERVICE TO RESTART COUNTING
+    }
+
+    private long nextDate() {
+        int repeatDays = task.getRepeatEveryDays();
+        long newStartTime;
+
+        long currentTime = task.getStartTime();
+        newStartTime = Math.max(task.getStartTime() + (repeatDays * 86400000L), currentTime + 86400000L);
+        Log.i("myTag", "every: " + repeatDays);
+        Log.i("myTag", "Next start time: " + TimeConverter.convertMillisToDateTime(newStartTime));
+        return newStartTime;
     }
 
     private void displayData() {
         if (taskId == -1) return;
 
-        TaskModel task = db.getOneTaskById(taskId);
+        task = db.getOneTaskById(taskId);
         if (task != null) {
             tvCropname.setText(task.getCropName());
             tvDate.setText(TimeConverter.convertMillisToDateTime(task.getStartTime()));

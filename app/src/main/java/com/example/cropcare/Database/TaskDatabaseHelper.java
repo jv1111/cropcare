@@ -129,5 +129,18 @@ public class TaskDatabaseHelper {
         return task;
     }
 
+    public void updateStartTime(int taskId, long newStartTime) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(TaskTable.COL_START_TIME, newStartTime);
+
+        int rowsAffected = db.update(TaskTable.TABLE_NAME, values, TaskTable.COL_ID + " = ?", new String[]{String.valueOf(taskId)});
+        if (rowsAffected > 0) {
+            Log.i("myTag", "Start time updated successfully for Task ID: " + taskId);
+        } else {
+            Log.e("myTag", "Failed to update start time for Task ID: " + taskId);
+        }
+        db.close();
+    }
 
 }
