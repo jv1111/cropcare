@@ -19,7 +19,7 @@ import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.MainActivity;
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.TaskActivity;
-import com.example.cropcare.helper.TimeConverter;
+import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.receivers.AlarmReceiver;
 
 import java.util.Comparator;
@@ -129,7 +129,7 @@ public class NotifierService extends Service {
                         }else{
                             long firstTaskTime = listOfTask.get(0).getStartTime();
                             long timeDiff = firstTaskTime - currentMillis;
-                            notificationText = "Time: " + TimeConverter.convertMillisToCountdown(timeDiff);
+                            notificationText = "Time: " + TimeHelper.convertMillisToCountdown(timeDiff);
                             if(timeDiff<=0){
                                 isRinging = true;
                             }

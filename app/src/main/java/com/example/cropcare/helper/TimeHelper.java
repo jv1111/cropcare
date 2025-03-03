@@ -1,10 +1,12 @@
 package com.example.cropcare.helper;
 
+import com.example.cropcare.Model.TaskModel;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class TimeConverter {
+public class TimeHelper {
     public static String convertMillisToDateTime(long millis) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
         Date date = new Date(millis);
@@ -20,5 +22,14 @@ public class TimeConverter {
         long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60;
 
         return String.format("%d days and %02d:%02d:%02d", days, hours, minutes, seconds);
+    }
+
+    public static long getNextDate(TaskModel task) {
+        int repeatDays = task.getRepeatEveryDays();
+        long newStartTime;
+
+        long currentTime = task.getStartTime();
+        newStartTime = Math.max(task.getStartTime() + (repeatDays * 86400000L), currentTime + 86400000L);
+        return newStartTime;
     }
 }

@@ -2,7 +2,6 @@ package com.example.cropcare;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,8 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.TaskModel;
-import com.example.cropcare.helper.DateHelper;
-import com.example.cropcare.helper.TimeConverter;
+import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.receivers.AlarmReceiver;
 import com.example.cropcare.services.NotifierService;
 
@@ -52,7 +50,7 @@ public class TaskActivity extends AppCompatActivity {
         AlarmReceiver.stopAlarm();
 
         displayData();
-        long newDateMillis = DateHelper.nextDate(task);
+        long newDateMillis = TimeHelper.getNextDate(task);
         db.updateStartTime(taskId, newDateMillis);
 
         NotifierService.stopService(this);
@@ -71,7 +69,7 @@ public class TaskActivity extends AppCompatActivity {
         task = db.getOneTaskById(taskId);
         if (task != null) {
             tvCropname.setText(task.getCropName());
-            tvDate.setText(TimeConverter.convertMillisToDateTime(task.getStartTime()));
+            tvDate.setText(TimeHelper.convertMillisToDateTime(task.getStartTime()));
             tvNote.setText(task.getNote());
         }
     }

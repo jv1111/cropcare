@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.R;
-import com.example.cropcare.helper.TimeConverter;
+import com.example.cropcare.helper.TimeHelper;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class AdapterTasksSelection extends RecyclerView.Adapter<ViewHolderTasks>
     public void onBindViewHolder(@NonNull ViewHolderTasks holder, int position) {
         String note = tasksList.get(position).getNote();
         int occurance = tasksList.get(position).getRepeatEveryDays();
-        String alarmDateTime = TimeConverter.convertMillisToDateTime(tasksList.get(position).getStartTime());
+        String alarmDateTime = TimeHelper.convertMillisToDateTime(tasksList.get(position).getStartTime());
 
         Log.i("myTag adapter tasks note: ", note);
 

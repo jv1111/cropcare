@@ -1,15 +1,10 @@
 package com.example.cropcare;
 
-import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,15 +18,11 @@ import com.example.cropcare.Database.CropDatabaseHelper;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.Model.TaskModel;
-import com.example.cropcare.helper.DateHelper;
 import com.example.cropcare.helper.Permissions;
-import com.example.cropcare.helper.TimeConverter;
-import com.example.cropcare.receivers.AlarmReceiver;
+import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.recycler.AdapterCrops;
 import com.example.cropcare.services.NotifierService;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterCrops.ICropListControlCB {
@@ -101,10 +92,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             List<TaskModel> tList = tdh.getAllTasks();
             for ( TaskModel tm: tList ) {
                 Log.i("myTag note: ", tm.getNote());
-                Log.i("myTag time: ", TimeConverter.convertMillisToDateTime(tm.getStartTime()));
+                Log.i("myTag time: ", TimeHelper.convertMillisToDateTime(tm.getStartTime()));
                 Log.i("myTag id: ", String.valueOf(tm.getId()));
                 Log.i("myTag repeat every: ", String.valueOf(tm.getRepeatEveryDays()));
-                Log.i("myTag next day: ", TimeConverter.convertMillisToDateTime(DateHelper.nextDate(tm)));
+                Log.i("myTag next day: ", TimeHelper.convertMillisToDateTime(TimeHelper.getNextDate(tm)));
                 Log.i("myTag", "=======================================================================");
             }
         });
