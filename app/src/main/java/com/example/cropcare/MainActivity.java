@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         Permissions.setAlarmPermission(this);
         cropDbHelper = new CropDatabaseHelper(this);
         btnRecord = findViewById(R.id.btnRecords);
-        startDateReaderService();
+        NotifierService.startService(this);
         setupButtons();
         setupRecyclerView(getAllCrops());
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         tdh.deleteAllTasks();
 
         long currentMillis = System.currentTimeMillis();
-        long startMillis = currentMillis + 10000;
+        long startMillis = currentMillis + 20000;
         long oneMonthPlus = currentMillis + (30L * 24 * 60 * 60 * 1000);
 
         for (int i = 0; i < 3; i++) {
@@ -108,13 +108,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             Log.i(TAG, crop.getName());
         }
         return cropList;
-    }
-
-    private void startDateReaderService(){
-        if(!NotifierService.isRunning){
-            Log.i("myTag", "starting the service");
-            startService(new Intent(this, NotifierService.class));
-        }
     }
 
     @Override

@@ -17,15 +17,15 @@ import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.helper.TimeConverter;
 import com.example.cropcare.receivers.AlarmReceiver;
+import com.example.cropcare.services.NotifierService;
 
 public class TaskActivity extends AppCompatActivity {
 
     private int taskId = 0;
-
     private TaskModel task;
 
-    TextView tvCropname, tvDate, tvNote;
-    Button btnOk;
+    private TextView tvCropname, tvDate, tvNote;
+    private Button btnOk;
 
     TaskDatabaseHelper db;
 
@@ -52,8 +52,14 @@ public class TaskActivity extends AppCompatActivity {
 
         displayData();
         nextDate();
+
+        NotifierService.stopService(this);
         //TODO UPDATE THE TASK IF IT HAS A REPEAT VALUE
         //TODO RESTART THE SERVICE TO RESTART COUNTING
+
+        btnOk.setOnClickListener(v-> {
+            NotifierService.startService(this);
+        });
     }
 
     private long nextDate() {
