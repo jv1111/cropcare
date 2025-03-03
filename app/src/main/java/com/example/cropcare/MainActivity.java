@@ -22,7 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cropcare.Database.CropDatabaseHelper;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
+import com.example.cropcare.Model.TaskModel;
+import com.example.cropcare.helper.DateHelper;
 import com.example.cropcare.helper.Permissions;
+import com.example.cropcare.helper.TimeConverter;
 import com.example.cropcare.receivers.AlarmReceiver;
 import com.example.cropcare.recycler.AdapterCrops;
 import com.example.cropcare.services.NotifierService;
@@ -62,35 +65,48 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     }
 
     private void test() {
-        TaskDatabaseHelper tdh = new TaskDatabaseHelper(this);
-        CropDatabaseHelper cdh = new CropDatabaseHelper(this);
+        if(!NotifierService.isRunning){
+            TaskDatabaseHelper tdh = new TaskDatabaseHelper(this);
+            CropDatabaseHelper cdh = new CropDatabaseHelper(this);
 
-        List<CropModel> cropList = cdh.getAllCrops();
-        if (cropList.isEmpty()) {
-            cdh.addNewCrop("Default Crop");
-            cropList = cdh.getAllCrops();
-        }
+            List<CropModel> cropList = cdh.getAllCrops();
+            if (cropList.isEmpty()) {
+                cdh.addNewCrop("Default Crop");
+                cropList = cdh.getAllCrops();
+            }
 
-        CropModel crop = cropList.get(0);
-        Log.i("myTag test", "id: " + crop.getId());
-        Log.i("myTag test", "name: " + crop.getName());
+            CropModel crop = cropList.get(0);
+            Log.i("myTag test", "id: " + crop.getId());
+            Log.i("myTag test", "name: " + crop.getName());
 
-        tdh.deleteAllTasks();
+            tdh.deleteAllTasks();
 
-        long currentMillis = System.currentTimeMillis();
-        long startMillis = currentMillis + 20000;
-        long oneMonthPlus = currentMillis + (30L * 24 * 60 * 60 * 1000);
+            long currentMillis = System.currentTimeMillis();
+            long startMillis = currentMillis + 10000;
+            long oneMonthPlus = currentMillis + (30L * 24 * 60 * 60 * 1000);
 
-        for (int i = 0; i < 3; i++) {
-            tdh.addNewTask(crop.getName(), crop.getId(), "Task " + (i + 1), startMillis, oneMonthPlus, true, 1);
-            startMillis += 300000;
+            for (int i = 0; i < 3; i++) {
+                tdh.addNewTask(crop.getName(), crop.getId(), "Task " + (i + 1), startMillis, oneMonthPlus, true, 1);
+                startMillis += 300000;
+            }
+        }else{
+            Log.i("myTag ", "creation canceled");
         }
     }
 
 
     private void setupButtons(){
         btnRecord.setOnClickListener(v -> {
-            getAllCrops();
+            TaskDatabaseHelper tdh = new TaskDatabaseHelper(this);
+            List<TaskModel> tList = tdh.getAllTasks();
+            for ( TaskModel tm: tList ) {
+                Log.i("myTag note: ", tm.getNote());
+                Log.i("myTag time: ", TimeConverter.convertMillisToDateTime(tm.getStartTime()));
+                Log.i("myTag id: ", String.valueOf(tm.getId()));
+                Log.i("myTag repeat every: ", String.valueOf(tm.getRepeatEveryDays()));
+                Log.i("myTag next day: ", TimeConverter.convertMillisToDateTime(DateHelper.nextDate(tm)));
+                Log.i("myTag", "=======================================================================");
+            }
         });
     }
 

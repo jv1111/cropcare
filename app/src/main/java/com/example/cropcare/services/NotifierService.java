@@ -26,6 +26,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class NotifierService extends Service {
+    private TaskDatabaseHelper taskDatabaseHelper;
+    private String notificationTitle;
     private static final String CHANNEL_ID = "NotifierServiceChannel";
     private static final int NOTIFICATION_ID = 1;
     public static boolean isRunning = false;
@@ -42,6 +44,7 @@ public class NotifierService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        taskDatabaseHelper = new TaskDatabaseHelper(this);
         createNotificationChannel();
     }
 
@@ -62,9 +65,11 @@ public class NotifierService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
+        TaskModel upcomingTask = taskDatabaseHelper.getFirstUpcomingTask();
+        notificationTitle = upcomingTask.getCropName() + " note: " + upcomingTask.getNote();
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Service Running")
-                .setContentText("This service runs in the background.")
+                .setContentTitle(notificationTitle)
+                .setContentText("....")
                 .setContentIntent(pendingIntent) // Set the PendingIntent
                 .setAutoCancel(true) // Dismiss notification when clicked
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -86,7 +91,7 @@ public class NotifierService extends Service {
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Service Running")
+                .setContentTitle(notificationTitle)
                 .setContentText(text)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setOnlyAlertOnce(true)
@@ -105,13 +110,8 @@ public class NotifierService extends Service {
     }
 
     private void notifierFunction(){
-        TaskDatabaseHelper taskDatabaseHelper = new TaskDatabaseHelper(this);
         List<TaskModel> listOfTask = taskDatabaseHelper.getUpcomingTasks();
         listOfTask.sort(Comparator.comparingLong(TaskModel::getStartTime));
-
-        for (TaskModel task : listOfTask) {
-            Log.i("myTag", "Upcoming Task: " + task.getCropName() + ", Start: " + TimeConverter.convertMillisToDateTime(task.getStartTime()));
-        }
 
         AlarmReceiver.setAlarmMillis(this, listOfTask.get(0).getStartTime());
 
@@ -122,14 +122,14 @@ public class NotifierService extends Service {
                     String notificationText = "";
                     long currentMillis = System.currentTimeMillis();
                     if (listOfTask.isEmpty()){
-                        notificationText = "There is not upcoming task";
+                        notificationText = "There is no upcoming task";
                     }else{
                         if(isRinging){
-                            notificationText = listOfTask.get(0).getCropName() + "note: " + listOfTask.get(0).getNote();
+                            notificationText = listOfTask.get(0).getCropName() + " note: " + listOfTask.get(0).getNote();
                         }else{
                             long firstTaskTime = listOfTask.get(0).getStartTime();
                             long timeDiff = firstTaskTime - currentMillis;
-                            notificationText = "Next Task in: " + TimeConverter.convertMillisToCountdown(timeDiff);
+                            notificationText = "Time: " + TimeConverter.convertMillisToCountdown(timeDiff);
                             if(timeDiff<=0){
                                 isRinging = true;
                             }
@@ -143,13 +143,14 @@ public class NotifierService extends Service {
     }
 
     public static void stopService(Context context) {
-        //TODO FIX THE STOP SERVICE
         Intent intent = new Intent(context, NotifierService.class);
         context.stopService(intent);
     }
 
     public static void startService(Context context){
-        context.startService(new Intent(context, NotifierService.class));
+        if(!isRunning){
+            context.startService(new Intent(context, NotifierService.class));
+        }
     }
 
 

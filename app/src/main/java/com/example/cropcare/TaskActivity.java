@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.TaskModel;
+import com.example.cropcare.helper.DateHelper;
 import com.example.cropcare.helper.TimeConverter;
 import com.example.cropcare.receivers.AlarmReceiver;
 import com.example.cropcare.services.NotifierService;
@@ -51,7 +52,8 @@ public class TaskActivity extends AppCompatActivity {
         AlarmReceiver.stopAlarm();
 
         displayData();
-        nextDate();
+        long newDateMillis = DateHelper.nextDate(task);
+        db.updateStartTime(taskId, newDateMillis);
 
         NotifierService.stopService(this);
         //TODO UPDATE THE TASK IF IT HAS A REPEAT VALUE
@@ -59,18 +61,8 @@ public class TaskActivity extends AppCompatActivity {
 
         btnOk.setOnClickListener(v-> {
             NotifierService.startService(this);
+            finish();
         });
-    }
-
-    private long nextDate() {
-        int repeatDays = task.getRepeatEveryDays();
-        long newStartTime;
-
-        long currentTime = task.getStartTime();
-        newStartTime = Math.max(task.getStartTime() + (repeatDays * 86400000L), currentTime + 86400000L);
-        Log.i("myTag", "every: " + repeatDays);
-        Log.i("myTag", "Next start time: " + TimeConverter.convertMillisToDateTime(newStartTime));
-        return newStartTime;
     }
 
     private void displayData() {
