@@ -1,5 +1,6 @@
 package com.example.cropcare;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private String TAG = "myTag";
     private Button btnRecord;
     private RecyclerView rv;
+    private AdapterCrops adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,48 +45,18 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             return insets;
         });
 
-        test();
-
         Permissions.checkNotification(this);
         Permissions.setAlarmPermission(this);
+
         cropDbHelper = new CropDatabaseHelper(this);
         btnRecord = findViewById(R.id.btnRecords);
+        rv = findViewById(R.id.rv);
+
         NotifierService.startService(this);
         setupButtons();
         setupRecyclerView(getAllCrops());
 
     }
-
-    private void test() {
-        if(!NotifierService.isRunning){
-            TaskDatabaseHelper tdh = new TaskDatabaseHelper(this);
-            CropDatabaseHelper cdh = new CropDatabaseHelper(this);
-
-            List<CropModel> cropList = cdh.getAllCrops();
-            if (cropList.isEmpty()) {
-                cdh.addNewCrop("Default Crop");
-                cropList = cdh.getAllCrops();
-            }
-
-            CropModel crop = cropList.get(0);
-            Log.i("myTag test", "id: " + crop.getId());
-            Log.i("myTag test", "name: " + crop.getName());
-
-            tdh.deleteAllTasks();
-
-            long currentMillis = System.currentTimeMillis();
-            long startMillis = currentMillis + 10000;
-            long oneMonthPlus = currentMillis + (30L * 24 * 60 * 60 * 1000);
-
-            for (int i = 0; i < 3; i++) {
-                tdh.addNewTask(crop.getName(), crop.getId(), "Task " + (i + 1), startMillis, oneMonthPlus, true, 1);
-                startMillis += 300000;
-            }
-        }else{
-            Log.i("myTag ", "creation canceled");
-        }
-    }
-
 
     private void setupButtons(){
         btnRecord.setOnClickListener(v -> {
@@ -101,10 +73,17 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupRecyclerView(getAllCrops());
+    }
+
     private void setupRecyclerView(List<CropModel> cropInfoList){
-        RecyclerView recyclerView = findViewById(R.id.rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new AdapterCrops(getApplicationContext(), cropInfoList, this));
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new AdapterCrops(getApplicationContext(), cropInfoList, this);
+        rv.setAdapter(adapter);
     }
 
     private List<CropModel> getAllCrops(){
