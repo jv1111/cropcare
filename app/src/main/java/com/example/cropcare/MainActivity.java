@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         NotifierService.startService(this);
         setupButtons();
         setupRecyclerView(getAllCrops());
-
     }
 
     private void setupButtons(){

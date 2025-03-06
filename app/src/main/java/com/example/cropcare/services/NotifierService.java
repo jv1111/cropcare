@@ -53,8 +53,6 @@ public class NotifierService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         isRunning = true;
 
-        Log.i("myTag service creation", "creating the service");
-
         startNotification();
         notifierFunction();
 
@@ -62,7 +60,6 @@ public class NotifierService extends Service {
     }
 
     private void startNotification(){
-        Log.i("myTag notification: ", "starting the notification");
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -85,7 +82,6 @@ public class NotifierService extends Service {
 
     private void updateNotification(String text, int currentTaskId) {
 
-        Log.i("service tag: ", "updating notification");
         Intent notificationIntent = new Intent(this, TaskActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -137,9 +133,6 @@ public class NotifierService extends Service {
             public void run() {
                 if (isRunning) {
 
-                    Log.i("handler", "handler running");
-                    Log.i("handler", "=========================");
-
                     String notificationText;
                     long currentMillis = System.currentTimeMillis();
 
@@ -169,8 +162,6 @@ public class NotifierService extends Service {
     public static void startService(Context context){
         if(!isRunning){
             context.startService(new Intent(context, NotifierService.class));
-        }else {
-            Log.i("myTag", "service is already running");
         }
     }
 
@@ -178,7 +169,6 @@ public class NotifierService extends Service {
     @Override
     public void onDestroy() {
         isRunning = false;
-        Log.i("myTag service creation", "destroying the service");
         handler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }

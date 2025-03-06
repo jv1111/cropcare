@@ -20,8 +20,9 @@ import com.example.cropcare.services.NotifierService;
 
 public class TaskActivity extends AppCompatActivity {
 
-    private int taskId = 0;
     private TaskModel task;
+    private boolean isTaskEnded;
+    private int taskId = -1;
 
     private TextView tvCropname, tvDate, tvNote;
     private Button btnOk;
@@ -40,22 +41,20 @@ public class TaskActivity extends AppCompatActivity {
         });
         db = new TaskDatabaseHelper(this);
 
+        taskId = getTaskIdFromIntent();
+        task = db.getOneTaskById(taskId);
+        isTaskEnded = db.isTaskEnded(taskId);
+
         tvCropname = findViewById(R.id.tvCropName);
         tvDate = findViewById(R.id.tvDate);
         tvNote = findViewById(R.id.tvNote);
-
         btnOk = findViewById(R.id.btnOk);
 
-        setTaskId();
         AlarmReceiver.stopAlarm();
-
         displayData();
-        long newDateMillis = TimeHelper.getNextDate(task);
-        db.updateStartTime(taskId, newDateMillis);
+        setTaskStatus();
 
         NotifierService.stopService(this);
-        //TODO UPDATE THE TASK IF IT HAS A REPEAT VALUE
-        //TODO RESTART THE SERVICE TO RESTART COUNTING
 
         btnOk.setOnClickListener(v-> {
             NotifierService.startService(this);
@@ -63,10 +62,17 @@ public class TaskActivity extends AppCompatActivity {
         });
     }
 
+    private void setTaskStatus(){
+        if(!isTaskEnded){
+            db.updateStartTime(taskId, TimeHelper.getNextDate(task));
+        }else{
+            db.deleteOneTask(taskId);
+        }
+    }
+
     private void displayData() {
         if (taskId == -1) return;
 
-        task = db.getOneTaskById(taskId);
         if (task != null) {
             tvCropname.setText(task.getCropName());
             tvDate.setText(TimeHelper.convertMillisToDateTime(task.getStartTime()));
@@ -74,12 +80,14 @@ public class TaskActivity extends AppCompatActivity {
         }
     }
 
-    private void setTaskId(){
+    private int getTaskIdFromIntent(){
+        int taskId = -1;
         Intent intent = getIntent();
         if (intent.getBooleanExtra("from_notification", false)) {
             taskId = intent.getIntExtra("taskId", -1);
             Toast.makeText(this, "Task ID: " + taskId, Toast.LENGTH_LONG).show();
         }
+        return taskId;
     }
 
 }

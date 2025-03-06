@@ -19,6 +19,12 @@ public class TaskDatabaseHelper {
         dbHelper = DataBaseHelper.getInstance(context);
     }
 
+    public boolean isTaskEnded(int taskId){
+        TaskModel task = getOneTaskById(taskId);
+        if(task == null) return false;
+        return task.getStartTime() <= System.currentTimeMillis();
+    }
+
     public void addNewTask(String cropName, int cropId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -172,5 +178,15 @@ public class TaskDatabaseHelper {
         return task;
     }
 
+    public void deleteOneTask(int taskId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int deletedRows = db.delete(TaskTable.TABLE_NAME, TaskTable.COL_ID + " = ?", new String[]{String.valueOf(taskId)});
+        if (deletedRows > 0) {
+            Log.i("myTag", "Task ID " + taskId + " deleted successfully.");
+        } else {
+            Log.e("myTag", "Failed to delete Task ID " + taskId);
+        }
+        db.close();
+    }
 
 }

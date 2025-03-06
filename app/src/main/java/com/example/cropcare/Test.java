@@ -11,7 +11,9 @@ import com.example.cropcare.services.NotifierService;
 import java.util.List;
 
 public class Test {
-    public static void test(Context context) {
+
+
+    public static void createMultipleTaskReset(Context context) {
         if (!NotifierService.isRunning) {
             TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
             CropDatabaseHelper cdh = new CropDatabaseHelper(context);
@@ -66,5 +68,33 @@ public class Test {
             startMillis += 300000;
         }
     }
+
+    public static void deleteAllTest(Context context) {
+        TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
+        tdh.deleteAllTasks();
+        Log.i("myTag", "All tasks deleted successfully.");
+    }
+
+    public static void createAnEndingTask(Context context) {
+        TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
+        CropDatabaseHelper cdh = new CropDatabaseHelper(context);
+
+        List<CropModel> cropList = cdh.getAllCrops();
+        if (cropList.isEmpty()) {
+            cdh.addNewCrop("Default Crop");
+            cropList = cdh.getAllCrops();
+        }
+
+        CropModel crop = cropList.get(0);
+        Log.i("myTag test", "id: " + crop.getId());
+        Log.i("myTag test", "name: " + crop.getName());
+
+        long startMillis = System.currentTimeMillis() + 10 * 1000;
+        long endMillis = startMillis;
+        int repeatInterval = 1;
+
+        tdh.addNewTask(crop.getName(), crop.getId(), "Ending Task", startMillis, endMillis, true, repeatInterval);
+    }
+
 }
 
