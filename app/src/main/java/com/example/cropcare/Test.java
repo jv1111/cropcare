@@ -18,10 +18,10 @@ public class Test {
             TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
             CropDatabaseHelper cdh = new CropDatabaseHelper(context);
 
-            List<CropModel> cropList = cdh.getAllCrops();
+            List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
             if (cropList.isEmpty()) {
                 cdh.addNewCrop("Default Crop", Auth.userId);
-                cropList = cdh.getAllCrops();
+                cropList = cdh.getAllCrops(Auth.userId);
             }
 
             CropModel crop = cropList.get(0);
@@ -45,7 +45,7 @@ public class Test {
 
     public static void logAllCrops(Context context) {
         CropDatabaseHelper cdh = new CropDatabaseHelper(context);
-        List<CropModel> cropList = cdh.getAllCrops();
+        List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
 
         if (cropList.isEmpty()) {
             Log.i("myTag", "No crops found.");
@@ -61,10 +61,10 @@ public class Test {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
         CropDatabaseHelper cdh = new CropDatabaseHelper(context);
 
-        List<CropModel> cropList = cdh.getAllCrops();
+        List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
         if (cropList.isEmpty()) {
             cdh.addNewCrop("Default Crop", Auth.userId);
-            cropList = cdh.getAllCrops();
+            cropList = cdh.getAllCrops(Auth.userId);
         }
 
         CropModel crop = cropList.get(0);
@@ -111,10 +111,10 @@ public class Test {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
         CropDatabaseHelper cdh = new CropDatabaseHelper(context);
 
-        List<CropModel> cropList = cdh.getAllCrops();
+        List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
         if (cropList.isEmpty()) {
             cdh.addNewCrop("Default Crop", Auth.userId);
-            cropList = cdh.getAllCrops();
+            cropList = cdh.getAllCrops(Auth.userId);
         }
 
         CropModel crop = cropList.get(0);

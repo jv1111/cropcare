@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     }
 
     private List<CropModel> getAllCrops(){
-        List<CropModel> cropList = cropDbHelper.getAllCrops();
+        List<CropModel> cropList = cropDbHelper.getAllCrops(Auth.userId);
         Log.i("myTag", "got the crops: crop count = " + cropList.size());
         for (CropModel crop: cropList
              ) {

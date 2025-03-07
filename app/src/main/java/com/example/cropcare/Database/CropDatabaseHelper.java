@@ -36,11 +36,12 @@ public class CropDatabaseHelper {
     }
 
 
-    public List<CropModel> getAllCrops() {
-        Log.i("myTag", "getting the crops....");
+    public List<CropModel> getAllCrops(int userId) {
+        Log.i("myTag", "getting the crops for user ID: " + userId);
         List<CropModel> cropList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + CropTable.TABLE_NAME, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + CropTable.TABLE_NAME + " WHERE " + CropTable.COL_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)});
 
         if (cursor.moveToFirst()) {
             do {
@@ -57,6 +58,5 @@ public class CropDatabaseHelper {
         db.close();
         return cropList;
     }
-
 
 }
