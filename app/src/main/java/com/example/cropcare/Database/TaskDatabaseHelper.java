@@ -25,10 +25,11 @@ public class TaskDatabaseHelper {
         return task.getStartTime() <= System.currentTimeMillis();
     }
 
-    public void addNewTask(String cropName, int cropId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
+    public void addNewTask(String cropName, int cropId, int userId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TaskTable.COL_CROP_ID, cropId);
+        values.put(TaskTable.COL_USER_ID, userId);
         values.put(TaskTable.COL_CROP_NAME, cropName);
         values.put(TaskTable.COL_NOTE, note);
         values.put(TaskTable.COL_START_TIME, startTime);
@@ -45,6 +46,7 @@ public class TaskDatabaseHelper {
         db.close();
     }
 
+
     public List<TaskModel> getAllTasks() {
         Log.i("myTag", "getting the tasks....");
         List<TaskModel> taskList = new ArrayList<>();
@@ -55,6 +57,7 @@ public class TaskDatabaseHelper {
             do {
                 TaskModel task = new TaskModel(
                         cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_USER_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
@@ -70,6 +73,7 @@ public class TaskDatabaseHelper {
         db.close();
         return taskList;
     }
+
 
     public List<TaskModel> getUpcomingTasks() {
         Log.i("myTag", "getting upcoming tasks...");
@@ -86,6 +90,7 @@ public class TaskDatabaseHelper {
             do {
                 TaskModel task = new TaskModel(
                         cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_USER_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
@@ -101,6 +106,7 @@ public class TaskDatabaseHelper {
         db.close();
         return taskList;
     }
+
 
     public void deleteAllTasks() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -121,6 +127,7 @@ public class TaskDatabaseHelper {
         if (cursor.moveToFirst()) {
             task = new TaskModel(
                     cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_USER_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
@@ -164,6 +171,7 @@ public class TaskDatabaseHelper {
         if (cursor.moveToFirst()) {
             task = new TaskModel(
                     cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_USER_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
@@ -177,6 +185,7 @@ public class TaskDatabaseHelper {
         db.close();
         return task;
     }
+
 
     public void deleteOneTask(int taskId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

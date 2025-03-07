@@ -3,6 +3,7 @@ package com.example.cropcare.Database.Tables;
 public class TaskTable implements IDatabaseTable {
     public static final String COL_ID = "id";
     public static final String TABLE_NAME = "Task";
+    public static final String COL_USER_ID = "user_id";
     public static final String COL_CROP_NAME = "crop_name";
     public static final String COL_CROP_ID = "crop_id";
     public static final String COL_NOTE = "note";
@@ -15,6 +16,7 @@ public class TaskTable implements IDatabaseTable {
     public String createTableQuery() {
         return "CREATE TABLE " + TABLE_NAME + " (" +
                 COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_USER_ID + " INTEGER NOT NULL, " +
                 COL_CROP_ID + " INTEGER NOT NULL, " +
                 COL_CROP_NAME + " TEXT NOT NULL, " +
                 COL_NOTE + " TEXT, " +
@@ -22,7 +24,8 @@ public class TaskTable implements IDatabaseTable {
                 COL_END_TIME + " INTEGER NOT NULL, " +
                 COL_IS_REPEAT + " INTEGER NOT NULL, " +
                 COL_REPEAT_EVERY + " INTEGER, " +
-                "FOREIGN KEY (" + COL_CROP_ID + ") REFERENCES Crop(id) ON DELETE CASCADE);";
+                "FOREIGN KEY (" + COL_CROP_ID + ") REFERENCES Crop(id) ON DELETE CASCADE, " +
+                "FOREIGN KEY (" + COL_USER_ID + ") REFERENCES Users(id) ON DELETE CASCADE);";
     }
 
     @Override

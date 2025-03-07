@@ -42,7 +42,7 @@ public class NewCropActivity extends AppCompatActivity {
         btnOk.setOnClickListener(v -> {
             String cropName = etCropName.getText().toString();
             Log.i("myTag adding crop: ", cropName);
-            cropDb.addNewCrop(cropName);
+            cropDb.addNewCrop(cropName, Auth.userId);
             finish();
         });
     }

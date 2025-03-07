@@ -122,7 +122,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     }
 
     private void addTask(String cropName, int cropId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
-        taskDatabaseHelper.addNewTask(cropName, cropId, note, startTime, endTime, isRepeat, repeatEveryDays);
+        taskDatabaseHelper.addNewTask(cropName, cropId, Auth.userId, note, startTime, endTime, isRepeat, repeatEveryDays);
         Toast.makeText(this, "Task added successfully!", Toast.LENGTH_SHORT).show();
         NotifierService.stopService(this);
         NotifierService.startService(this);

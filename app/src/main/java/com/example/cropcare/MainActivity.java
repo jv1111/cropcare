@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         rv = findViewById(R.id.rv);
         tvUsername = findViewById(R.id.tvUsername);
 
-        tvUsername.setText("Welcome, " + localStorageHelper.getUsername());
+        tvUsername.setText("Welcome, " + Auth.username);
 
         NotifierService.startService(this);
         setupButtons();
@@ -70,16 +70,9 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private void setupButtons(){
         btnRecord.setOnClickListener(v -> {
-            TaskDatabaseHelper tdh = new TaskDatabaseHelper(this);
-            List<TaskModel> tList = tdh.getAllTasks();
-            for ( TaskModel tm: tList ) {
-                Log.i("myTag note: ", tm.getNote());
-                Log.i("myTag time: ", TimeHelper.convertMillisToDateTime(tm.getStartTime()));
-                Log.i("myTag id: ", String.valueOf(tm.getId()));
-                Log.i("myTag repeat every: ", String.valueOf(tm.getRepeatEveryDays()));
-                Log.i("myTag next day: ", TimeHelper.convertMillisToDateTime(TimeHelper.getNextDate(tm)));
-                Log.i("myTag", "=======================================================================");
-            }
+            Test.logAllCrops(getApplicationContext());
+            Log.i("myTag", "----------------------");
+            Test.logAllTasks(getApplicationContext());
         });
 
         btnLogout.setOnClickListener(v -> {

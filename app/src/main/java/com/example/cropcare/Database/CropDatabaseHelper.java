@@ -19,10 +19,11 @@ public class CropDatabaseHelper {
         dbHelper = DataBaseHelper.getInstance(context);
     }
 
-    public void addNewCrop(String cropName) {
+    public void addNewCrop(String cropName, int userId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(CropTable.COL_NAME, cropName);
+        values.put(CropTable.COL_USER_ID, userId);
         values.put(CropTable.COL_DATE, System.currentTimeMillis()); // Store date in milliseconds
 
         long result = db.insert(CropTable.TABLE_NAME, null, values);
@@ -45,6 +46,7 @@ public class CropDatabaseHelper {
             do {
                 CropModel crop = new CropModel(
                         cursor.getInt(cursor.getColumnIndexOrThrow(CropTable.COL_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(CropTable.COL_USER_ID)),
                         cursor.getLong(cursor.getColumnIndexOrThrow(CropTable.COL_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(CropTable.COL_NAME))
                 );
@@ -55,5 +57,6 @@ public class CropDatabaseHelper {
         db.close();
         return cropList;
     }
+
 
 }

@@ -69,6 +69,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void checkLogin(){
         if(localStorage.getUserId() != -1){
+            Auth.userId = localStorage.getUserId();
+            Auth.username = localStorage.getUsername();
             navigateToHomePage();
         }
     }
@@ -85,6 +87,8 @@ public class LoginActivity extends AppCompatActivity {
         else
         {
             localStorage.saveUserData(user.getId(), user.getUsername());
+            Auth.userId = user.getId();
+            Auth.username = user.getUsername();
             Log.i(TAG, "Logged in user: " + user.toString());
             navigateToHomePage();
             finish();
