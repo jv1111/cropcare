@@ -49,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         userDatabaseHelper.addUser(username, password, true);
         Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 }

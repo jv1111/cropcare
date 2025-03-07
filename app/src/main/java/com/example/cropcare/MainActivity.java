@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import com.example.cropcare.Database.CropDatabaseHelper;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.Model.TaskModel;
+import com.example.cropcare.helper.LocalStorageHelper;
 import com.example.cropcare.helper.Permissions;
 import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.recycler.AdapterCrops;
@@ -30,10 +32,13 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
-    private Button btnRecord;
+    private Button btnRecord, btnLogout;
     private RecyclerView rv;
     private AdapterCrops adapter;
+    private TextView tvUsername;
+    private LocalStorageHelper localStorageHelper;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +50,18 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             return insets;
         });
 
+        localStorageHelper = new LocalStorageHelper(this);
+
         Permissions.checkNotification(this);
         Permissions.setAlarmPermission(this);
 
         cropDbHelper = new CropDatabaseHelper(this);
         btnRecord = findViewById(R.id.btnRecords);
+        btnLogout = findViewById(R.id.btnLogout);
         rv = findViewById(R.id.rv);
+        tvUsername = findViewById(R.id.tvUsername);
+
+        tvUsername.setText("Welcome, " + localStorageHelper.getUsername());
 
         NotifierService.startService(this);
         setupButtons();
@@ -70,6 +81,14 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
                 Log.i("myTag", "=======================================================================");
             }
         });
+
+        btnLogout.setOnClickListener(v -> {
+            localStorageHelper.clearUserData();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
+        //TODO MODIFY THE DATABASE FOR THE CROP AND TASK, IT MUST HAVE userIds
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -37,6 +37,7 @@ android {
 dependencies {
 
     implementation("androidx.recyclerview:recyclerview:1.3.1")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
     implementation(libs.appcompat)
     implementation(libs.material)

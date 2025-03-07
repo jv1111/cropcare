@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cropcare.Database.DataBaseHelper;
 import com.example.cropcare.Database.UserDatabaseHelper;
 import com.example.cropcare.Model.UserModel;
+import com.example.cropcare.helper.LocalStorageHelper;
 import com.example.cropcare.helper.Validator;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button btnLogin, btnRegister;
 
+    private LocalStorageHelper localStorage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,14 +46,14 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        checkLogin();
-
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
 
+        localStorage = new LocalStorageHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
+        checkLogin();
 
         buttonsFunctions();
     }
@@ -65,10 +68,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void checkLogin(){
-        navigateToHomePage();
+        if(localStorage.getUserId() != -1){
+            navigateToHomePage();
+        }
     }
 
     public void login() {
+        //TODO update the localdatabase for admin and normal user just add isAdmin
         String username = etUsername.getText().toString().toLowerCase().trim();
         String password = etPassword.getText().toString().toLowerCase().trim();
 
@@ -78,8 +84,10 @@ public class LoginActivity extends AppCompatActivity {
             if(!Objects.equals(user.getPassword(), password)) Toast.makeText(this, "Invalid password", Toast.LENGTH_LONG).show();
         else
         {
+            localStorage.saveUserData(user.getId(), user.getUsername());
             Log.i(TAG, "Logged in user: " + user.toString());
             navigateToHomePage();
+            finish();
         }
     }
 
