@@ -63,7 +63,9 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         tvUsername.setText("Welcome, " + Auth.username);
 
+        if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
+
         setupButtons();
         setupRecyclerView(getAllCrops());
     }
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             localStorageHelper.clearUserData();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+            NotifierService.stopService(this);
             finish();
         });
         //TODO MODIFY THE DATABASE FOR THE CROP AND TASK, IT MUST HAVE userIds

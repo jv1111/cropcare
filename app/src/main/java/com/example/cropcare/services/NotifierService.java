@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.cropcare.Auth;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.MainActivity;
 import com.example.cropcare.Model.TaskModel;
@@ -66,7 +67,7 @@ public class NotifierService extends Service {
                 this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        upcomingTask = taskDatabaseHelper.getFirstUpcomingTask();
+        upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.userId);
         if(upcomingTask != null) notificationTitle = upcomingTask.getCropName() + " note: " + upcomingTask.getNote();
         else notificationTitle = "No upcoming task";
 
@@ -114,7 +115,7 @@ public class NotifierService extends Service {
     }
 
     private void notifierFunction() {
-        TaskModel upcomingTask = taskDatabaseHelper.getFirstUpcomingTask();
+        TaskModel upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.userId);
 
         if (upcomingTask == null) {
             updateNotification("There is no upcoming task", 0);

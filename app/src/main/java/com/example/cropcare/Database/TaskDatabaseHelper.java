@@ -156,16 +156,16 @@ public class TaskDatabaseHelper {
         db.close();
     }
 
-    public TaskModel getFirstUpcomingTask() {
+    public TaskModel getFirstUpcomingTask(int userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         long currentMillis = System.currentTimeMillis();
         TaskModel task = null;
 
         Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + TaskTable.TABLE_NAME +
-                        " WHERE " + TaskTable.COL_START_TIME + " > ? " +
+                        " WHERE " + TaskTable.COL_START_TIME + " > ? AND " + TaskTable.COL_USER_ID + " = ?" +
                         " ORDER BY " + TaskTable.COL_START_TIME + " ASC LIMIT 1",
-                new String[]{String.valueOf(currentMillis)}
+                new String[]{String.valueOf(currentMillis), String.valueOf(userId)}
         );
 
         if (cursor.moveToFirst()) {
@@ -185,7 +185,6 @@ public class TaskDatabaseHelper {
         db.close();
         return task;
     }
-
 
     public void deleteOneTask(int taskId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
