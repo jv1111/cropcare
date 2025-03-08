@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         if(localStorage.getUserId() != -1){
             Auth.userId = localStorage.getUserId();
             Auth.username = localStorage.getUsername();
+            Auth.isAdmin = localStorage.isAdmin();
             navigateToHomePage();
         }
     }
@@ -86,9 +87,10 @@ public class LoginActivity extends AppCompatActivity {
             if(!Objects.equals(user.getPassword(), password)) Toast.makeText(this, "Invalid password", Toast.LENGTH_LONG).show();
         else
         {
-            localStorage.saveUserData(user.getId(), user.getUsername());
+            localStorage.saveUserData(user.getId(), user.getUsername(), user.isAdmin());
             Auth.userId = user.getId();
             Auth.username = user.getUsername();
+            Auth.isAdmin = user.isAdmin();
             Log.i(TAG, "Logged in user: " + user.toString());
             navigateToHomePage();
             finish();

@@ -1,10 +1,8 @@
 package com.example.cropcare;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,21 +11,20 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cropcare.Database.CoFarmerDatabaseHelper;
-import com.example.cropcare.Database.DataBaseHelper;
 import com.example.cropcare.Database.UserDatabaseHelper;
-import com.example.cropcare.Model.UserModel;
 import com.example.cropcare.helper.Validator;
 
-public class RegisterActivity extends AppCompatActivity {
+public class AddNewCoFarmerActivity extends AppCompatActivity {
 
-    private EditText etUsername, etPassword;
-    private UserDatabaseHelper userDatabaseHelper;
+    EditText etUsername, etPassword;
+    Button btnAddCoFarmer;
+    CoFarmerDatabaseHelper coFarmerDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_add_new_co_farmer);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -36,21 +33,26 @@ public class RegisterActivity extends AppCompatActivity {
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-        userDatabaseHelper = new UserDatabaseHelper(this);
+        btnAddCoFarmer = findViewById(R.id.btnAddCoFarmer);
+
+        coFarmerDbHelper = new CoFarmerDatabaseHelper(this);
+
+
+        setupButtonsFunctions();
 
     }
 
+    private void setupButtonsFunctions() {
+        btnAddCoFarmer.setOnClickListener(v -> {
+            String username = etUsername.getText().toString().trim();
+            String password = etPassword.getText().toString();
 
-    public void registerUser(View view) {
-        String username = etUsername.getText().toString().trim().toLowerCase();
-        String password = etPassword.getText().toString().trim();
+            if(!Validator.isUserInputValid(username, password, this)) return;
+            if (!Validator.isUsernameAvailable(username, this, new UserDatabaseHelper(this), coFarmerDbHelper)) return;
 
-        if(!Validator.isUserInputValid(username, password, this)) return;
-        if (!Validator.isUsernameAvailable(username, this, userDatabaseHelper, new CoFarmerDatabaseHelper(this))) return;
+            coFarmerDbHelper.addCoFarmer(Auth.userId ,username, password);
 
-        userDatabaseHelper.addUser(username, password, true);
-        Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
-        finish();
+            finish();
+        });
     }
-
 }

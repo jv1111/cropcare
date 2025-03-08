@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -21,12 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropcare.Database.CropDatabaseHelper;
-import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
-import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.helper.LocalStorageHelper;
 import com.example.cropcare.helper.Permissions;
-import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.recycler.AdapterCrops;
 import com.example.cropcare.services.NotifierService;
 
@@ -37,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
     private Button btnRecord;
-    private ConstraintLayout btnLogout;
+    private ConstraintLayout btnLogout, btnAddCoFarmer;
     private RecyclerView rv;
     private AdapterCrops adapter;
     private TextView tvUsername;
@@ -69,11 +65,14 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         tvUsername = findViewById(R.id.tvUsername);
         btnMenu = findViewById(R.id.btnMenu);
         layoutMenu = findViewById(R.id.layoutMenu);
+        btnAddCoFarmer = findViewById(R.id.btnAddCoFarmer);
 
         tvUsername.setText("Welcome, " + Auth.username);
 
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
+
+        TestCoFarm.deleteAllCoFarmers(this);
 
         setupButtons();
         setupRecyclerView(getAllCrops());
@@ -81,9 +80,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private void setupButtons(){
         btnRecord.setOnClickListener(v -> {
-            Test.logAllCrops(getApplicationContext());
-            Log.i("myTag", "----------------------");
-            Test.logAllTasks(getApplicationContext());
+            TestCoFarm.listAllCoFarmers(this);
         });
 
         btnLogout.setOnClickListener(v -> {
@@ -100,6 +97,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         layoutMenu.setOnClickListener(v->{
             layoutMenu.setVisibility(View.GONE);
+        });
+
+        btnAddCoFarmer.setOnClickListener(v->{
+            startActivity(new Intent(MainActivity.this, AddNewCoFarmerActivity.class));
         });
 
     }

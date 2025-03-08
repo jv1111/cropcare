@@ -11,7 +11,7 @@ import com.example.cropcare.services.NotifierService;
 
 import java.util.List;
 
-public class Test {
+public class TestTask {
 
     public static void createMultipleTaskReset(Context context) {
         if (!NotifierService.isRunning) {
@@ -55,7 +55,6 @@ public class Test {
             }
         }
     }
-
 
     public static void createTask(Context context) {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
@@ -104,8 +103,6 @@ public class Test {
             }
         }
     }
-
-
 
     public static void createAnEndingTask(Context context) {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
