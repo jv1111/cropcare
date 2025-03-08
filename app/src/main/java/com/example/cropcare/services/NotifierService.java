@@ -67,7 +67,7 @@ public class NotifierService extends Service {
                 this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.userId);
+        upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.isAdmin ? Auth.userId : Auth.parentId);
         if(upcomingTask != null) notificationTitle = upcomingTask.getCropName() + " note: " + upcomingTask.getNote();
         else notificationTitle = "No upcoming task";
 
@@ -115,7 +115,7 @@ public class NotifierService extends Service {
     }
 
     private void notifierFunction() {
-        TaskModel upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.userId);
+        TaskModel upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.isAdmin ? Auth.userId : Auth.parentId);
 
         if (upcomingTask == null) {
             updateNotification("There is no upcoming task", 0);

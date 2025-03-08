@@ -14,8 +14,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.cropcare.Database.CoFarmerDatabaseHelper;
 import com.example.cropcare.Database.DataBaseHelper;
 import com.example.cropcare.Database.UserDatabaseHelper;
+import com.example.cropcare.Model.CoFarmerModel;
 import com.example.cropcare.Model.UserModel;
 import com.example.cropcare.helper.LocalStorageHelper;
 import com.example.cropcare.helper.Validator;
@@ -27,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "myTag loginActivity: ";
     private UserDatabaseHelper userDatabaseHelper;
+    private CoFarmerDatabaseHelper coFarmerDatabaseHelper;
 
     private EditText etUsername;
     private EditText etPassword;
@@ -53,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
 
         localStorage = new LocalStorageHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
+        coFarmerDatabaseHelper = new CoFarmerDatabaseHelper(this);
         checkLogin();
 
         buttonsFunctions();
@@ -69,32 +73,54 @@ public class LoginActivity extends AppCompatActivity {
 
     public void checkLogin(){
         if(localStorage.getUserId() != -1){
-            Auth.userId = localStorage.getUserId();
-            Auth.username = localStorage.getUsername();
-            Auth.isAdmin = localStorage.isAdmin();
+            Auth.setUserData(localStorage.getUserId(), localStorage.getUsername(), localStorage.isAdmin(), localStorage.getParentId());
             navigateToHomePage();
         }
     }
 
     public void login() {
-        //TODO update the localdatabase for admin and normal user just add isAdmin
         String username = etUsername.getText().toString().toLowerCase().trim();
         String password = etPassword.getText().toString().toLowerCase().trim();
 
+        if (attemptUserLogin(username, password)) return;
+        if (attemptCoFarmerLogin(username, password)) return;
+
+        Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show();
+    }
+
+    private boolean attemptUserLogin(String username, String password) {
+        Log.i("myTag: ", "attempt user");
         UserModel user = userDatabaseHelper.getUserByUsername(username);
-        if (user == null) Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show();
-        else
-            if(!Objects.equals(user.getPassword(), password)) Toast.makeText(this, "Invalid password", Toast.LENGTH_LONG).show();
-        else
-        {
-            localStorage.saveUserData(user.getId(), user.getUsername(), user.isAdmin());
-            Auth.userId = user.getId();
-            Auth.username = user.getUsername();
-            Auth.isAdmin = user.isAdmin();
-            Log.i(TAG, "Logged in user: " + user.toString());
-            navigateToHomePage();
-            finish();
+        if (user == null) return false;
+
+        if (!Objects.equals(user.getPassword(), password)) {
+            Toast.makeText(this, "Invalid password", Toast.LENGTH_LONG).show();
+            return true;
         }
+
+        localStorage.saveUserData(user.getId(), user.getUsername(), user.isAdmin(), null);
+        Auth.setUserData(user.getId(), user.getUsername(), user.isAdmin(), null);
+
+        Toast.makeText(this, "Logged in admin", Toast.LENGTH_LONG).show();
+        navigateToHomePage();
+        return true;
+    }
+
+    private boolean attemptCoFarmerLogin(String username, String password) {
+        Log.i("myTag: ", "attempt co farm");
+        CoFarmerModel coFarmer = coFarmerDatabaseHelper.getCoFarmerByUsername(username);
+        if (coFarmer == null) return false;
+
+        if (!Objects.equals(coFarmer.getPassword(), password)) {
+            Toast.makeText(this, "Invalid password", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        localStorage.saveUserData(coFarmer.getId(), coFarmer.getUsername(), false, coFarmer.getParentUserId());
+        Auth.setUserData(coFarmer.getId(), coFarmer.getUsername(), false, coFarmer.getParentUserId());
+        Toast.makeText(this, "Logged in co farmer", Toast.LENGTH_LONG).show();
+        navigateToHomePage();
+        return true;
     }
 
     private void navigateToHomePage(){

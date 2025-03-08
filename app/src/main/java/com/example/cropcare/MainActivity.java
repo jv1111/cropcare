@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
-    private Button btnRecord;
+    private Button btnRecord, btnAdd;
     private ConstraintLayout btnLogout, btnAddCoFarmer;
     private RecyclerView rv;
     private AdapterCrops adapter;
@@ -66,19 +66,29 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         btnMenu = findViewById(R.id.btnMenu);
         layoutMenu = findViewById(R.id.layoutMenu);
         btnAddCoFarmer = findViewById(R.id.btnAddCoFarmer);
+        btnAdd = findViewById(R.id.btnAddNewCropTask);
 
         tvUsername.setText("Welcome, " + Auth.username);
 
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
 
-        TestCoFarm.deleteAllCoFarmers(this);
+        //TODO TEST THE FUNCTIONS FOR THE CO FARMERS
+        //TODO SHOW THE CROPS AND THE TASKS OF THE CO FARMERS
 
+        setRestrictions();
         setupButtons();
         setupRecyclerView(getAllCrops());
     }
 
+    private void setRestrictions(){
+        if(!Auth.isAdmin){
+            btnAdd.setEnabled(false);
+        }
+    }
+
     private void setupButtons(){
+
         btnRecord.setOnClickListener(v -> {
             TestCoFarm.listAllCoFarmers(this);
         });
@@ -103,6 +113,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             startActivity(new Intent(MainActivity.this, AddNewCoFarmerActivity.class));
         });
 
+        btnAdd.setOnClickListener(v->{
+            navigateToAddNew();
+        });
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -119,13 +133,19 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     }
 
     private List<CropModel> getAllCrops(){
-        List<CropModel> cropList = cropDbHelper.getAllCrops(Auth.userId);
+        Auth.printUserInfo();
+        List<CropModel> cropList = cropDbHelper.getAllCrops(Auth.isAdmin ? Auth.userId : Auth.parentId);
         Log.i("myTag", "got the crops: crop count = " + cropList.size());
         for (CropModel crop: cropList
              ) {
             Log.i(TAG, crop.getName());
         }
         return cropList;
+    }
+
+    public void navigateToAddNew() {
+        Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -139,11 +159,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     @Override
     public void onDelete(int id) {
 
-    }
-
-    public void navigateToAddNew(View view) {
-        Intent intent = new Intent(MainActivity.this, AddActivity.class);
-        startActivity(intent);
     }
 
 }

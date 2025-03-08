@@ -22,6 +22,7 @@ import java.util.List;
 public class TaskSelectionActivity extends AppCompatActivity implements AdapterTasksSelection.ITasksSelection {
 
     private TaskDatabaseHelper taskDatabaseHelper;
+    private int cropId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class TaskSelectionActivity extends AppCompatActivity implements AdapterT
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        cropId = getIntent().getIntExtra("cropId", -1);
         taskDatabaseHelper = new TaskDatabaseHelper(this);
         setupRecyclerView(getTasks());
     }
@@ -52,7 +54,7 @@ public class TaskSelectionActivity extends AppCompatActivity implements AdapterT
     }
 
     private List<TaskModel> getTasks(){
-        return taskDatabaseHelper.getAllTasks();
+        return taskDatabaseHelper.getAllTasksByCropId(cropId);
     }
 
     @Override

@@ -19,9 +19,9 @@ public class TaskDatabaseHelper {
         dbHelper = DataBaseHelper.getInstance(context);
     }
 
-    public boolean isTaskEnded(int taskId){
+    public boolean isTaskEnded(int taskId) {
         TaskModel task = getOneTaskById(taskId);
-        if(task == null) return false;
+        if (task == null) return false;
         return task.getStartTime() <= System.currentTimeMillis();
     }
 
@@ -197,4 +197,65 @@ public class TaskDatabaseHelper {
         db.close();
     }
 
+    public List<TaskModel> getAllTasksByUserId(int userId) {
+        Log.i("myTag", "Getting tasks for user ID: " + userId);
+        List<TaskModel> taskList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TaskTable.TABLE_NAME + " WHERE " + TaskTable.COL_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                TaskModel task = new TaskModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_USER_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_START_TIME)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_END_TIME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_IS_REPEAT)) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_REPEAT_EVERY))
+                );
+                taskList.add(task);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return taskList;
+    }
+
+    public List<TaskModel> getAllTasksByCropId(int cropId) {
+        Log.i("myTag", "Getting tasks for crop ID: " + cropId);
+        List<TaskModel> taskList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TaskTable.TABLE_NAME + " WHERE " + TaskTable.COL_CROP_ID + " = ?",
+                new String[]{String.valueOf(cropId)}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                TaskModel task = new TaskModel(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_ID)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_USER_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_NAME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_CROP_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(TaskTable.COL_NOTE)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_START_TIME)),
+                        cursor.getLong(cursor.getColumnIndexOrThrow(TaskTable.COL_END_TIME)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_IS_REPEAT)) == 1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(TaskTable.COL_REPEAT_EVERY))
+                );
+                taskList.add(task);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return taskList;
+    }
 }
