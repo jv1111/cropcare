@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -32,11 +36,14 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
-    private Button btnRecord, btnLogout;
+    private Button btnRecord;
+    private ConstraintLayout btnLogout;
     private RecyclerView rv;
     private AdapterCrops adapter;
     private TextView tvUsername;
     private LocalStorageHelper localStorageHelper;
+    private ImageButton btnMenu;
+    private LinearLayout layoutMenu;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -60,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         btnLogout = findViewById(R.id.btnLogout);
         rv = findViewById(R.id.rv);
         tvUsername = findViewById(R.id.tvUsername);
+        btnMenu = findViewById(R.id.btnMenu);
+        layoutMenu = findViewById(R.id.layoutMenu);
 
         tvUsername.setText("Welcome, " + Auth.username);
 
@@ -84,7 +93,15 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             NotifierService.stopService(this);
             finish();
         });
-        //TODO MODIFY THE DATABASE FOR THE CROP AND TASK, IT MUST HAVE userIds
+
+        btnMenu.setOnClickListener(v->{
+            layoutMenu.setVisibility(View.VISIBLE);
+        });
+
+        layoutMenu.setOnClickListener(v->{
+            layoutMenu.setVisibility(View.GONE);
+        });
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
