@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,35 +8,44 @@
     android:layout_height="match_parent"
     tools:context=".NewCropActivity">
 
-    <EditText
-        android:id="@+id/etCropName"
+    <LinearLayout
         android:layout_width="wrap_content"
+        android:minWidth="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="272dp"
-        android:ems="10"
-        android:hint="Crop name"
-        android:inputType="text"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        android:background="@drawable/shape_rounded_panel"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnConfirmAddCrop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Ok"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etCropName" />
-
-    <Button
-        android:id="@+id/btnCancelAddCrop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="25dp"
-        android:text="Cancel"
-        app:layout_constraintStart_toStartOf="@+id/btnConfirmAddCrop"
-        app:layout_constraintTop_toBottomOf="@+id/btnConfirmAddCrop" />
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:fontFamily="@font/aclonica"
+            android:text="Add a crop" />
+        <EditText
+            android:id="@+id/etCropName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Crop name"
+            android:inputType="text"
+            android:ems="10"
+            />
+        <Button
+            android:id="@+id/btnConfirmAddCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ok"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton" />
+        <Button
+            android:id="@+id/btnCancelAddCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            style="@style/DangerButton" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

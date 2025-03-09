@@ -11,6 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        android:background="@drawable/shape_rounded_panel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,19 +23,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Selection" />
+            android:textSize="18sp"
+            android:fontFamily="@font/aclonica"
+            android:text="What do you want to add?" />
 
         <Button
             android:id="@+id/btnAddCrop"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="navigateToAddCrop"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:text="Add New Crop" />
 
         <Button
             android:id="@+id/btnAddTask"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:onClick="navigateToAddCropSelectionForTaskCreation"
             android:text="Add New Task" />
     </LinearLayout>

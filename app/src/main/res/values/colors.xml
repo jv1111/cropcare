@@ -4,4 +4,15 @@
     <color name="white">#FFFFFFFF</color>
     <color name="alpha_black">#CB000000</color>
     <color name="test">#80FF0000</color>
+
+    <color name="primary">#4CAF50</color>
+    <color name="background">#F1F8E9</color>
+    <color name="primary_text">#1B5E20</color>
+    <color name="secondary_text">#558B2F</color>
+    <color name="secondary_button">#FFC107</color>
+    <color name="danger_button">#D32F2F</color>
+
+    <color name="primary_items">#E8F5E9</color>
+
+
 </resources>

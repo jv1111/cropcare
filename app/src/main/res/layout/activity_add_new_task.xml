@@ -11,85 +11,122 @@
         android:id="@+id/tvCropName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="72dp"
-        android:text="TextView"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/aclonica"
+        android:textColor="@color/primary_text"
+        android:text="CropName: "
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnOk"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="56dp"
-        android:text="Ok"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnCancel" />
-
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="62dp"
-        android:layout_marginBottom="144dp"
-        android:text="Cancel"
+        android:background="@drawable/shape_rounded_panel"
+        android:orientation="vertical"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/etTaskNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="63dp"
-        android:ems="10"
-        android:hint="Note"
-        android:inputType="text"
-        android:lines="5"
-        android:singleLine="false"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.468"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCropName" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCropName"
+        app:layout_constraintVertical_bias="0.349">
 
-    <Button
-        android:id="@+id/btnSelectStartDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="72dp"
-        android:text="Start Date"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/etDay"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/etTaskNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:hint="Note"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnSelectEndDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:text="End Date"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btnSelectStartDate"
-        app:layout_constraintStart_toEndOf="@+id/btnSelectStartDate" />
+        <LinearLayout
+            android:id="@+id/layoutDateSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etTaskNote">
 
-    <CheckBox
-        android:id="@+id/cbRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Repeat"
-        app:layout_constraintBaseline_toBaselineOf="@+id/etDay"
-        app:layout_constraintStart_toStartOf="@+id/btnSelectStartDate" />
+            <Button
+                android:id="@+id/btnSelectStartDate"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:icon="@drawable/baseline_calendar_month_24"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Start Date" />
 
-    <EditText
-        android:id="@+id/etDay"
-        android:layout_width="81dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="74dp"
-        android:layout_marginBottom="79dp"
-        android:ems="10"
-        android:hint="Days"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/btnCancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnSelectEndDate" />
+            <TextView
+                android:id="@+id/tvStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Start Date: "
+                android:textColor="@color/primary_text" />
+
+            <Button
+                android:id="@+id/btnSelectEndDate"
+                app:icon="@drawable/baseline_calendar_month_24"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="End Date" />
+
+            <TextView
+                android:id="@+id/tvEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="End Date: "
+                android:textColor="@color/primary_text" />
+
+        </LinearLayout>
+
+
+        <CheckBox
+            android:id="@+id/cbRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repeat"
+            android:textColor="@color/primary_text"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutDateSelection"
+            tools:layout_editor_absoluteY="206dp" />
+
+        <EditText
+            android:id="@+id/etDay"
+            android:layout_width="81dp"
+            android:layout_height="45dp"
+            android:ems="10"
+            android:hint="Days"
+            android:inputType="number"
+            app:layout_constraintLeft_toRightOf="@id/cbRepeat"
+            app:layout_constraintTop_toBottomOf="@id/layoutDateSelection" />
+
+        <Button
+            android:id="@+id/btnOk"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ok"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cbRepeat" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="@style/DangerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnOk" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
