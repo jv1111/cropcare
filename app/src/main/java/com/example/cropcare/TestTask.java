@@ -7,98 +7,52 @@ import com.example.cropcare.Database.CropDatabaseHelper;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.Model.TaskModel;
+import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.services.NotifierService;
 
 import java.util.List;
 
 public class TestTask {
 
-    public static void createMultipleTaskReset(Context context) {
-        if (!NotifierService.isRunning) {
-            TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
-            CropDatabaseHelper cdh = new CropDatabaseHelper(context);
-
-            List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
-            if (cropList.isEmpty()) {
-                cdh.addNewCrop("Default Crop", Auth.userId);
-                cropList = cdh.getAllCrops(Auth.userId);
-            }
-
-            CropModel crop = cropList.get(0);
-            Log.i("myTag test", "id: " + crop.getId());
-            Log.i("myTag test", "name: " + crop.getName());
-
-            tdh.deleteAllTasks();
-
-            long currentMillis = System.currentTimeMillis();
-            long startMillis = currentMillis + 10000;
-            long oneMonthPlus = currentMillis + (30L * 24 * 60 * 60 * 1000);
-
-            for (int i = 0; i < 3; i++) {
-                tdh.addNewTask(crop.getName(), crop.getId(), Auth.userId, "Task " + (i + 1), startMillis, oneMonthPlus, true, 1);
-                startMillis += 300000;
-            }
-        } else {
-            Log.i("myTag", "creation canceled");
-        }
-    }
-
-    public static void logAllCrops(Context context) {
+    public static void deleteAllCrops(Context context) {
         CropDatabaseHelper cdh = new CropDatabaseHelper(context);
-        List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
-
-        if (cropList.isEmpty()) {
-            Log.i("myTag", "No crops found.");
-        } else {
-            for (CropModel crop : cropList) {
-                Log.i("myTag", "Crop ID: " + crop.getId() + ", User ID: " + crop.getUserId() + ", Name: " + crop.getName() + ", Date: " + crop.getDate());
-            }
-        }
+        cdh.deleteAllCrops();
+        Log.i("myTag", "All crops deleted successfully.");
     }
 
-    public static void createTask(Context context) {
-        TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
-        CropDatabaseHelper cdh = new CropDatabaseHelper(context);
-
-        List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
-        if (cropList.isEmpty()) {
-            cdh.addNewCrop("Default Crop", Auth.userId);
-            cropList = cdh.getAllCrops(Auth.userId);
-        }
-
-        CropModel crop = cropList.get(0);
-        Log.i("myTag test", "id: " + crop.getId());
-        Log.i("myTag test", "name: " + crop.getName());
-
-        tdh.deleteAllTasks();
-
-        long currentMillis = System.currentTimeMillis();
-        long startMillis = currentMillis + 10000;
-        long oneMonthPlus = currentMillis + (30L * 24 * 60 * 60 * 1000);
-
-        for (int i = 0; i < 3; i++) {
-            tdh.addNewTask(crop.getName(), crop.getId(), Auth.userId, "Task " + (i + 1), startMillis, oneMonthPlus, true, 1);
-            startMillis += 300000;
-        }
-    }
-
-    public static void deleteAllTest(Context context) {
+    public static void deleteAllTasks(Context context) {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
         tdh.deleteAllTasks();
         Log.i("myTag", "All tasks deleted successfully.");
     }
 
-    public static void logAllTasks(Context context) {
+    public static void listAllCrops(Context context) {
+        CropDatabaseHelper cdh = new CropDatabaseHelper(context);
+        int userId = Auth.isAdmin ? Auth.userId : Auth.parentId;
+        List<CropModel> cropList = cdh.getAllCrops(userId);
+
+        if (cropList.isEmpty()) {
+            Log.i("myTag", "No crops found.");
+        } else {
+            for (CropModel crop : cropList) {
+                Log.i("myTag", "Crop ID: " + crop.getId() + ", User ID: " + crop.getUserId() +
+                        ", Name: " + crop.getName() + ", Date: " + crop.getDate());
+            }
+        }
+    }
+
+    public static void listAllTasks(Context context) {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
         List<TaskModel> taskList = tdh.getAllTasks();
+
         if (taskList.isEmpty()) {
             Log.i("myTag", "No tasks found.");
         } else {
             for (TaskModel task : taskList) {
                 Log.i("myTag", "Task ID: " + task.getId() + ", User ID: " + task.getUserId() +
                         ", Crop Name: " + task.getCropName() + ", Crop ID: " + task.getCropId() +
-                        ", Note: " + task.getNote() + ", Start Time: " + task.getStartTime() +
-                        ", End Time: " + task.getEndTime() + ", Repeat: " + task.isRepeat() +
+                        ", Note: " + task.getNote() + ", Start Time: " + TimeHelper.convertMillisToDateTime(task.getStartTime()) +
+                        ", End Time: " + TimeHelper.convertMillisToDateTime(task.getEndTime()) + ", Repeat: " + task.isRepeat() +
                         ", Repeat Every Days: " + task.getRepeatEveryDays());
             }
         }
@@ -107,22 +61,43 @@ public class TestTask {
     public static void createAnEndingTask(Context context) {
         TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
         CropDatabaseHelper cdh = new CropDatabaseHelper(context);
+        int userId = Auth.isAdmin ? Auth.userId : Auth.parentId;
 
-        List<CropModel> cropList = cdh.getAllCrops(Auth.userId);
+        List<CropModel> cropList = cdh.getAllCrops(userId);
         if (cropList.isEmpty()) {
-            cdh.addNewCrop("Default Crop", Auth.userId);
-            cropList = cdh.getAllCrops(Auth.userId);
+            cdh.addNewCrop("Default Crop", userId);
+            cropList = cdh.getAllCrops(userId);
         }
 
         CropModel crop = cropList.get(0);
-        Log.i("myTag test", "id: " + crop.getId());
-        Log.i("myTag test", "name: " + crop.getName());
+        long startMillis = System.currentTimeMillis() + 10000; // 20 seconds from now
+        long endMillis = startMillis; // End time is equal to start time
 
-        long startMillis = System.currentTimeMillis() + 10 * 1000;
-        long endMillis = startMillis;
-        int repeatInterval = 1;
+        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Ending Task", startMillis, endMillis, true, 2);
 
-        tdh.addNewTask(crop.getName(), crop.getId(), Auth.userId, "Ending Task", startMillis, endMillis, true, repeatInterval);
+        Log.i("myTag", "Ending task created successfully.");
+    }
+
+    public static void createThreeTasks(Context context) {
+        TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
+        CropDatabaseHelper cdh = new CropDatabaseHelper(context);
+        int userId = Auth.isAdmin ? Auth.userId : Auth.parentId;
+
+        List<CropModel> cropList = cdh.getAllCrops(userId);
+        if (cropList.isEmpty()) {
+            cdh.addNewCrop("Default Crop", userId);
+            cropList = cdh.getAllCrops(userId);
+        }
+
+        CropModel crop = cropList.get(0);
+        long currentMillis = System.currentTimeMillis();
+        long endMillis = currentMillis + (30L * 24 * 60 * 60 * 1000); // 30 days from now
+
+        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 1", currentMillis + 10000, endMillis, true, 2);
+        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 2", currentMillis + 20000, endMillis, true, 1);
+        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 3", currentMillis + 30000, endMillis, true, 3);
+
+        Log.i("myTag", "Three tasks created successfully.");
     }
 
 }

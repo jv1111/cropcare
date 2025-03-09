@@ -73,9 +73,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
 
-        //TODO TEST THE FUNCTIONS FOR THE CO FARMERS
-        //TODO SHOW THE CROPS AND THE TASKS OF THE CO FARMERS
-
         setRestrictions();
         setupButtons();
         setupRecyclerView(getAllCrops());

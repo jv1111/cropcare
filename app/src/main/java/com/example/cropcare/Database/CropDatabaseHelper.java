@@ -59,4 +59,11 @@ public class CropDatabaseHelper {
         return cropList;
     }
 
+    public void deleteAllCrops() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int rowsDeleted = db.delete(CropTable.TABLE_NAME, null, null);
+        db.close();
+        Log.i("myTag", "Deleted " + rowsDeleted + " crops successfully.");
+    }
+
 }

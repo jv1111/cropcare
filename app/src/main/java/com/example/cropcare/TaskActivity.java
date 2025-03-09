@@ -2,6 +2,7 @@ package com.example.cropcare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,17 +56,20 @@ public class TaskActivity extends AppCompatActivity {
         setTaskStatus();
 
         NotifierService.stopService(this);
+        NotifierService.startService(this);
 
         btnOk.setOnClickListener(v-> {
-            NotifierService.startService(this);
             finish();
         });
     }
 
     private void setTaskStatus(){
         if(!isTaskEnded){
+            Log.i("myTag", "updating task time");
             db.updateStartTime(taskId, TimeHelper.getNextDate(task));
+            TestTask.listAllTasks(this);
         }else{
+            Log.i("myTag", "task ended deleting task");
             db.deleteOneTask(taskId);
         }
     }

@@ -22,7 +22,7 @@ public class TaskDatabaseHelper {
     public boolean isTaskEnded(int taskId) {
         TaskModel task = getOneTaskById(taskId);
         if (task == null) return false;
-        return task.getStartTime() <= System.currentTimeMillis();
+        return task.getEndTime() <= System.currentTimeMillis();
     }
 
     public void addNewTask(String cropName, int cropId, int userId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
