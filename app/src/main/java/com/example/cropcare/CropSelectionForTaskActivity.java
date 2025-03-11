@@ -30,7 +30,8 @@ public class CropSelectionForTaskActivity extends AppCompatActivity implements A
         setContentView(R.layout.activity_crop_selection_for_task);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            int leftRightPadding = (int) (10 * getResources().getDisplayMetrics().density);
+            v.setPadding(leftRightPadding, systemBars.top, leftRightPadding, systemBars.bottom);
             return insets;
         });
         cropDbHelper = new CropDatabaseHelper(this);
@@ -43,6 +44,7 @@ public class CropSelectionForTaskActivity extends AppCompatActivity implements A
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new AdapterCropSelection(getApplicationContext(), cropInfoList, this));
     }
+
 
     public List<CropModel> getAllCrops(){
         List<CropModel> cropList = cropDbHelper.getAllCrops(Auth.userId);

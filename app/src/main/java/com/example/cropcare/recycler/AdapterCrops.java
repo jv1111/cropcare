@@ -15,7 +15,6 @@ import java.util.List;
 
 public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
-    Context context;
     List<CropModel> cropInfoList;
     private ICropListControlCB cb;
 
@@ -25,7 +24,6 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
     }
 
     public AdapterCrops(Context context, List<CropModel> cropInfoList, ICropListControlCB cb){
-        this.context = context;
         this.cropInfoList = cropInfoList;
         this.cb = cb;
     }
@@ -33,7 +31,7 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
     @NonNull
     @Override
     public ViewHolderCrops onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolderCrops(LayoutInflater.from(context).inflate(R.layout.rec_item_crop, parent, false));
+        return new ViewHolderCrops(LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_item_crop, parent, false));
     }
 
     @Override

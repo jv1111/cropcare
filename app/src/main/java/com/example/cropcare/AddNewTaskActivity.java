@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.TaskModel;
+import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.services.NotifierService;
 
 import java.util.Calendar;
@@ -29,7 +30,7 @@ import java.util.List;
 
 public class AddNewTaskActivity extends AppCompatActivity {
 
-    private TextView tvCropName;
+    private TextView tvCropName, tvStartDate, tvEndDate;
     private Button btnStartDate, btnEndDate, btnOk, btnCancel;
     private CheckBox cbRepeat;
     private String cropName;
@@ -38,8 +39,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private int cropId;
 
     private long startTime, endTime;
-    private int repeatEveryDays = 0;
-    private boolean isRepeat;
+    private int repeatEveryDays = 1;
+    private boolean isRepeat = false;
     private String note;
 
     public interface OnDateTimeSelectedListener {
@@ -64,6 +65,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         tvCropName = findViewById(R.id.tvCropName);
         tvCropName.setText(cropName);
+        tvStartDate = findViewById(R.id.tvStartDate);
+        tvEndDate = findViewById(R.id.tvEndDate);
         btnStartDate = findViewById(R.id.btnSelectStartDate);
         btnEndDate = findViewById(R.id.btnSelectEndDate);
         cbRepeat = findViewById(R.id.cbRepeat);
@@ -72,6 +75,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         btnOk = findViewById(R.id.btnOk);
         btnCancel = findViewById(R.id.btnCancel);
 
+        setIsRepeatView(isRepeat);
         setupButtonsFunctions();
     }
 
@@ -79,24 +83,31 @@ public class AddNewTaskActivity extends AppCompatActivity {
         btnStartDate.setOnClickListener(v -> {
             showDateTimePicker(millis -> {
                 startTime = millis;
+                String date = "Start Date: " + TimeHelper.convertMillisToDateTime(millis);
+                tvStartDate.setText(date);
                 Toast.makeText(this, "Start Date Millis: " + millis, Toast.LENGTH_SHORT).show();
             });
         });
         btnEndDate.setOnClickListener(v -> {
             showDateTimePicker(millis -> {
                 endTime = millis;
+                String date = "End Date: " + TimeHelper.convertMillisToDateTime(millis);
+                tvEndDate.setText(date);
                 Toast.makeText(this, "Start Date Millis: " + millis, Toast.LENGTH_SHORT).show();
             });
         });
         btnOk.setOnClickListener(v -> {
-            if (cbRepeat.isChecked()) {
+            if (isRepeat) {
                 try {
                     repeatEveryDays = Integer.parseInt(etRepeatEvery.getText().toString());
                 } catch (NumberFormatException e) {
-                    repeatEveryDays = 0; // Default to 0 if input is invalid
+                    repeatEveryDays = 1; // Default to 0 if input is invalid
                 }
+                addTask(cropName, cropId, note, startTime, endTime, isRepeat, repeatEveryDays);
+            }else{
+                endTime = startTime;
+                addTask(cropName, cropId, note, startTime, endTime, isRepeat, 1);
             }
-            addTask(cropName, cropId, note, startTime, endTime, isRepeat, repeatEveryDays);
         });
         btnCancel.setOnClickListener(v -> {
             List<TaskModel> tasks = taskDatabaseHelper.getAllTasks();
@@ -104,7 +115,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 Log.i("TaskList", task.toString());
             }
         });
-        cbRepeat.setOnCheckedChangeListener((buttonView, isChecked) -> isRepeat = isChecked);
+        cbRepeat.setOnCheckedChangeListener((buttonView, isChecked) ->{
+            isRepeat = isChecked;
+            setIsRepeatView(isRepeat);
+        });
         etTaskNote.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -121,7 +135,26 @@ public class AddNewTaskActivity extends AppCompatActivity {
         });
     }
 
+    private void setIsRepeatView(boolean isRepeat){
+        if(!isRepeat){
+            etRepeatEvery.setEnabled(false);
+            btnEndDate.setEnabled(false);
+            btnEndDate.setEnabled(false);
+            endTime = 0;
+            repeatEveryDays = 1;
+            tvEndDate.setText("End Date: Not Set");
+        }else{
+            etRepeatEvery.setEnabled(true);
+            btnEndDate.setEnabled(true);
+            btnEndDate.setEnabled(true);
+        }
+    }
+
     private void addTask(String cropName, int cropId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
+        if (cropName == null || cropName.isEmpty() || note == null || note.isEmpty() || startTime <= 0 || endTime <= 0 || repeatEveryDays < 0) {
+            Toast.makeText(this, "All parameters must be valid and not empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         taskDatabaseHelper.addNewTask(cropName, cropId, Auth.userId, note, startTime, endTime, isRepeat, repeatEveryDays);
         Toast.makeText(this, "Task added successfully!", Toast.LENGTH_SHORT).show();
         NotifierService.stopService(this);
