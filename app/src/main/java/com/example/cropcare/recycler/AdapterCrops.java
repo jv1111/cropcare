@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropcare.Model.CropModel;
@@ -42,6 +43,8 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
         holder.tvCropName.setText(cropName);
         holder.tvCropDate.setText(date);
 
+        preventScrollOnTouch(holder);
+
         holder.btnDelete.setOnClickListener(v ->{
             cb.onDelete(id);
         });
@@ -55,5 +58,23 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
         return cropInfoList.size();
     }
 
+    private void preventScrollOnTouch(ViewHolderCrops holder) {
+        holder.itemMainLayout.setTransitionListener(new MotionLayout.TransitionListener() {
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
+            }
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
+                holder.itemView.getParent().requestDisallowInterceptTouchEvent(true);
+            }
+
+            @Override
+            public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {}
+
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {}
+        });
+    }
 
 }
