@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
     private Button btnRecord, btnAdd;
-    private ConstraintLayout btnLogout, btnAddCoFarmer;
+    private Button btnLogout, btnAddCoFarmer;
     private RecyclerView rv;
     private AdapterCrops adapter;
     private TextView tvUsername;

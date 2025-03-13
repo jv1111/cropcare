@@ -105,101 +105,41 @@
         android:focusable="true"
         android:gravity="center"
         android:visibility="gone"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@drawable/shape_rounded_panel"
             android:orientation="vertical"
             android:padding="10dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <Button
                 android:id="@+id/btnAddCoFarmer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/test"
-                android:clickable="true"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:text="Add Co-Farmer"
+                app:icon="@drawable/baseline_account_box_24"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Add Co-Farmer"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_account_box_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <Button
                 android:id="@+id/btnUpdatePassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/test"
-                android:clickable="true"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:text="Update Password"
+                app:icon="@drawable/baseline_password_24"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Update Password"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_password_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <Button
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/test"
-                android:clickable="true"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:text="Logout"
+                app:icon="@drawable/baseline_logout_24"
+                android:textColor="@color/danger_button"
+                app:iconTint="@color/danger_button"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Logout"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_logout_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </LinearLayout>
 
