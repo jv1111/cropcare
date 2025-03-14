@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropcare.Database.CropDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
+import com.example.cropcare.helper.AnimationHelper;
 import com.example.cropcare.helper.LocalStorageHelper;
 import com.example.cropcare.helper.Permissions;
 import com.example.cropcare.recycler.AdapterCrops;
@@ -32,16 +33,15 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
-    private Button btnRecord, btnAdd;
+    private Button btnRecord, btnAdd, btnCancelUpdate, btnConfirmUpdate;
     private Button btnLogout, btnAddCoFarmer;
     private RecyclerView rv;
     private AdapterCrops adapter;
     private TextView tvUsername;
     private LocalStorageHelper localStorageHelper;
     private ImageButton btnMenu;
-    private LinearLayout layoutMenu;
+    private LinearLayout layoutMenu, layoutUpdate, layoutUpdatePanel;
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +65,12 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         tvUsername = findViewById(R.id.tvUsername);
         btnMenu = findViewById(R.id.btnMenu);
         layoutMenu = findViewById(R.id.layoutMenu);
+        layoutUpdate = findViewById(R.id.layoutUpdate);
         btnAddCoFarmer = findViewById(R.id.btnAddCoFarmer);
         btnAdd = findViewById(R.id.btnAddNewCropTask);
+        btnCancelUpdate = findViewById(R.id.btnCancelUpdate);
+        btnConfirmUpdate = findViewById(R.id.btnConfirmUpadte);
+        layoutUpdatePanel = findViewById(R.id.layoutUpdatePanel);
 
         tvUsername.setText("Welcome, " + Auth.username);
 
@@ -114,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             navigateToAddNew();
         });
 
+        btnCancelUpdate.setOnClickListener(v->{
+            hideUpdateMenu();
+        });
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -140,9 +148,23 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         return cropList;
     }
 
-    public void navigateToAddNew() {
+    private void navigateToAddNew() {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(intent);
+    }
+
+    private void showUpdateMenu(){
+        layoutUpdate.setVisibility(View.VISIBLE);
+        AnimationHelper.popupLinear(layoutUpdatePanel, getApplicationContext());
+    }
+
+    private void hideUpdateMenu(){
+        layoutUpdate.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onUpdate(int id, String cropName) {
+        showUpdateMenu();
     }
 
     @Override

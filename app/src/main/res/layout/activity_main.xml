@@ -104,8 +104,7 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="200dp"
@@ -139,6 +138,55 @@
                 android:textColor="@color/danger_button"
                 app:iconTint="@color/danger_button"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/alpha_black"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:visibility="visible"
+    >
+        <LinearLayout
+            android:id="@+id/layoutUpdatePanel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rounded_panel"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/aclonica"
+                android:textSize="18sp"
+                android:text="Update crop name: "
+                />
+
+            <EditText
+                android:id="@+id/etUpdateCropName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Crop Name"/>
+
+            <Button
+                android:id="@+id/btnConfirmUpadte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+
+            <Button
+                android:id="@+id/btnCancelUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                style="@style/DangerButton"/>
 
         </LinearLayout>
     </LinearLayout>

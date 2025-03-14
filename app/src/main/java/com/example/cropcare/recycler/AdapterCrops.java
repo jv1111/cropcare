@@ -20,6 +20,7 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
     private ICropListControlCB cb;
 
     public interface ICropListControlCB{
+        void onUpdate(int id, String cropName);
         void onSelect(int id, String cropName);
         void onDelete(int id);
     }
@@ -45,6 +46,9 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
         preventScrollOnTouch(holder);
 
+        holder.btnUpdate.setOnClickListener(v->{
+            cb.onUpdate(id, cropName);
+        });
         holder.btnDelete.setOnClickListener(v ->{
             cb.onDelete(id);
         });
