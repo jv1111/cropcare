@@ -29,4 +29,8 @@ public class Validator {
         return true;
     }
 
+    public static boolean isCropNameValid(String str) {
+        return str != null && str.length() >= 3;
+    }
+
 }

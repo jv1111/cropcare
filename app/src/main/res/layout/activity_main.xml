@@ -150,7 +150,7 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
     >
         <LinearLayout
             android:id="@+id/layoutUpdatePanel"
@@ -187,6 +187,49 @@
                 android:layout_height="wrap_content"
                 android:text="Cancel"
                 style="@style/DangerButton"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDelete"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/alpha_black"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/layoutDeletePanel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rounded_panel"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/aclonica"
+                android:text="Are you sure you want to delete?"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnConfirmDelete"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="YES" />
+
+            <Button
+                android:id="@+id/btnCancelDelete"
+                style="@style/DangerButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NO" />
 
         </LinearLayout>
     </LinearLayout>

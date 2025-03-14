@@ -66,4 +66,34 @@ public class CropDatabaseHelper {
         Log.i("myTag", "Deleted " + rowsDeleted + " crops successfully.");
     }
 
+    public boolean deleteCropById(int cropId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int rowsDeleted = db.delete(CropTable.TABLE_NAME, CropTable.COL_ID + " = ?", new String[]{String.valueOf(cropId)});
+        db.close();
+        if (rowsDeleted > 0) {
+            Log.i("myTag", "Crop deleted successfully for ID: " + cropId);
+            return true;
+        } else {
+            Log.e("myTag", "Failed to delete crop for ID: " + cropId);
+            return false;
+        }
+    }
+
+    public void updateCropName(int cropId, String newCropName) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CropTable.COL_NAME, newCropName);
+
+        int rowsUpdated = db.update(CropTable.TABLE_NAME, values, CropTable.COL_ID + " = ?",
+                new String[]{String.valueOf(cropId)});
+
+        if (rowsUpdated > 0) {
+            Log.i("myTag", "Crop name updated successfully for ID: " + cropId);
+        } else {
+            Log.e("myTag", "Failed to update crop name for ID: " + cropId);
+        }
+        db.close();
+    }
+
+
 }

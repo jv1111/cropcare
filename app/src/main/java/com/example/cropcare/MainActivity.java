@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,10 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cropcare.Database.CropDatabaseHelper;
+import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.helper.AnimationHelper;
 import com.example.cropcare.helper.LocalStorageHelper;
 import com.example.cropcare.helper.Permissions;
+import com.example.cropcare.helper.Validator;
 import com.example.cropcare.recycler.AdapterCrops;
 import com.example.cropcare.services.NotifierService;
 
@@ -32,15 +35,19 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements AdapterCrops.ICropListControlCB {
 
     private CropDatabaseHelper cropDbHelper;
+    private TaskDatabaseHelper taskDatabaseHelper;
     private String TAG = "myTag";
-    private Button btnRecord, btnAdd, btnCancelUpdate, btnConfirmUpdate;
+    private Button btnRecord, btnAdd, btnCancelUpdate, btnConfirmUpdate, btnConfirmDelete, btnCancelDelete;
     private Button btnLogout, btnAddCoFarmer;
     private RecyclerView rv;
     private AdapterCrops adapter;
     private TextView tvUsername;
     private LocalStorageHelper localStorageHelper;
     private ImageButton btnMenu;
-    private LinearLayout layoutMenu, layoutUpdate, layoutUpdatePanel;
+    private LinearLayout layoutMenu, layoutUpdate, layoutUpdatePanel, layoutDelete, layoutDeletePanel;
+    private EditText etUpdateCropName;
+
+    private int selectedCropId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         Permissions.setAlarmPermission(this);
 
         cropDbHelper = new CropDatabaseHelper(this);
+        taskDatabaseHelper = new TaskDatabaseHelper(this);
+
         btnRecord = findViewById(R.id.btnRecords);
         btnLogout = findViewById(R.id.btnLogout);
         rv = findViewById(R.id.rv);
@@ -71,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         btnCancelUpdate = findViewById(R.id.btnCancelUpdate);
         btnConfirmUpdate = findViewById(R.id.btnConfirmUpadte);
         layoutUpdatePanel = findViewById(R.id.layoutUpdatePanel);
+        etUpdateCropName = findViewById(R.id.etUpdateCropName);
+        btnConfirmDelete = findViewById(R.id.btnConfirmDelete);
+        btnCancelDelete = findViewById(R.id.btnCancelDelete);
+        layoutDelete = findViewById(R.id.layoutDelete);
+        layoutDeletePanel = findViewById(R.id.layoutDeletePanel);
 
         tvUsername.setText("Welcome, " + Auth.username);
 
@@ -91,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private void setupButtons(){
 
         btnRecord.setOnClickListener(v -> {
-            TestCoFarm.listAllCoFarmers(this);
+            TestTask.listAllTasks(getApplicationContext());
         });
 
         btnLogout.setOnClickListener(v -> {
@@ -120,6 +134,28 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         btnCancelUpdate.setOnClickListener(v->{
             hideUpdateMenu();
+        });
+
+        btnConfirmUpdate.setOnClickListener(v->{
+            String cropName = etUpdateCropName.getText().toString().trim();
+            if(Validator.isCropNameValid(cropName)){
+                cropDbHelper.updateCropName(selectedCropId, cropName);
+                taskDatabaseHelper.deleteAllTaskByCropId(selectedCropId);
+                etUpdateCropName.setText("");
+                setupRecyclerView(getAllCrops());
+                hideUpdateMenu();
+            }
+        });
+
+        btnConfirmDelete.setOnClickListener(v->{
+            cropDbHelper.deleteCropById(selectedCropId);
+            setupRecyclerView(getAllCrops());
+            hideDeletePrompt();
+        });
+
+        btnCancelDelete.setOnClickListener(v->{
+            Log.i("myTag delete", "hiding delete prompt");
+            hideDeletePrompt();
         });
 
     }
@@ -159,11 +195,26 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     }
 
     private void hideUpdateMenu(){
+        layoutUpdate.clearAnimation();
         layoutUpdate.setVisibility(View.GONE);
+        selectedCropId = -1;
+    }
+
+    private void showDeletePrompt(){
+        layoutDelete.setVisibility(View.VISIBLE);
+        AnimationHelper.popupLinear(layoutDelete, getApplicationContext());
+    }
+
+    private void hideDeletePrompt(){
+        selectedCropId = -1;
+        Log.i("myTag delete", "setting gone");
+        layoutDelete.clearAnimation();
+        layoutDelete.setVisibility(View.GONE);
     }
 
     @Override
     public void onUpdate(int id, String cropName) {
+        selectedCropId = id;
         showUpdateMenu();
     }
 
@@ -177,7 +228,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     @Override
     public void onDelete(int id) {
-
+        selectedCropId = id;
+        showDeletePrompt();
     }
 
 }

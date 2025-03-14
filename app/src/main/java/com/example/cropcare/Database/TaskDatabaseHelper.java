@@ -197,6 +197,17 @@ public class TaskDatabaseHelper {
         db.close();
     }
 
+    public void deleteAllTaskByCropId(int cropId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int deletedRows = db.delete(TaskTable.TABLE_NAME, TaskTable.COL_CROP_ID + " = ?", new String[]{String.valueOf(cropId)});
+        if (deletedRows > 0) {
+            Log.i("myTag", "Deleted " + deletedRows + " tasks for crop ID: " + cropId);
+        } else {
+            Log.e("myTag", "No tasks found for crop ID: " + cropId);
+        }
+        db.close();
+    }
+
     public List<TaskModel> getAllTasksByUserId(int userId) {
         Log.i("myTag", "Getting tasks for user ID: " + userId);
         List<TaskModel> taskList = new ArrayList<>();

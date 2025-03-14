@@ -1,7 +1,12 @@
 package com.example.cropcare.recycler;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.provider.ContactsContract;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.motion.widget.MotionLayout;
@@ -18,6 +23,7 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
     List<CropModel> cropInfoList;
     private ICropListControlCB cb;
+    private Context context;
 
     public interface ICropListControlCB{
         void onUpdate(int id, String cropName);
@@ -28,6 +34,7 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
     public AdapterCrops(Context context, List<CropModel> cropInfoList, ICropListControlCB cb){
         this.cropInfoList = cropInfoList;
         this.cb = cb;
+        this.context = context;
     }
 
     @NonNull
@@ -36,6 +43,7 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
         return new ViewHolderCrops(LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_item_crop, parent, false));
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCrops holder, int position) {
         String date = "Date Created: " + TimeHelper.convertMillisToDateTime(cropInfoList.get(position).getDate());
@@ -46,15 +54,21 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
 
         preventScrollOnTouch(holder);
 
+        GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                cb.onSelect(id, cropName);
+                return super.onSingleTapUp(e);
+            }
+        });
+
         holder.btnUpdate.setOnClickListener(v->{
             cb.onUpdate(id, cropName);
         });
         holder.btnDelete.setOnClickListener(v ->{
             cb.onDelete(id);
         });
-        holder.itemView.setOnClickListener(v -> {
-            cb.onSelect(id, cropName);
-        });
+        holder.itemView.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
     }
 
     @Override
