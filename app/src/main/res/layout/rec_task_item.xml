@@ -1,43 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemMainLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:layout_marginBottom="5dp"
+    android:padding="0dp"
+    app:layoutDescription="@xml/rec_task_item_scene">
 
-    <TextView
-        android:id="@+id/tvTaskDate"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/itemLayoutLabels"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_rounded_items"
+        android:padding="18dp"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvTaskDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date: "
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTaskNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TaskNote: "
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTaskDate" />
+
+        <TextView
+            android:id="@+id/tvEvery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Every: "
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTaskNote" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/ivMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Date: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/layoutMenu"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        />
+        android:layout_marginRight="10dp"
+        app:srcCompat="@drawable/baseline_keyboard_double_arrow_left_24"
+        app:tint="@color/primary" />
 
-    <TextView
-        android:id="@+id/tvTaskNote"
+    <LinearLayout
+        android:id="@+id/layoutMenu"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TaskNote: "
-        app:layout_constraintTop_toBottomOf="@id/tvTaskDate"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <TextView
-        android:id="@+id/tvEvery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Every: "
-        app:layout_constraintTop_toBottomOf="@id/tvTaskNote"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <Button
-        android:id="@+id/btnDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_rounded_panel"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintLeft_toRightOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btnDelete"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:textColor="@color/danger_button"
+            android:textSize="10sp"
+            app:icon="@drawable/baseline_delete_24"
+            app:iconTint="@color/danger_button"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.motion.widget.MotionLayout>
