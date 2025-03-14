@@ -98,12 +98,12 @@ public class AddNewTaskActivity extends AppCompatActivity {
         });
         btnOk.setOnClickListener(v -> {
             if (isRepeat) {
-                try {
-                    repeatEveryDays = Integer.parseInt(etRepeatEvery.getText().toString());
-                } catch (NumberFormatException e) {
-                    repeatEveryDays = 1; // Default to 0 if input is invalid
+                String repeatEveryDaysStr = etRepeatEvery.getText().toString().trim();
+                if(repeatEveryDaysStr.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "All parameters must be valid and not empty!", Toast.LENGTH_SHORT).show();
+                }else{
+                    addTask(cropName, cropId, note, startTime, endTime, isRepeat, repeatEveryDays);
                 }
-                addTask(cropName, cropId, note, startTime, endTime, isRepeat, repeatEveryDays);
             }else{
                 endTime = startTime;
                 addTask(cropName, cropId, note, startTime, endTime, isRepeat, 1);

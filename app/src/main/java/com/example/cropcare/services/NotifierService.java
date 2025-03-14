@@ -170,6 +170,7 @@ public class NotifierService extends Service {
     @Override
     public void onDestroy() {
         isRunning = false;
+        AlarmReceiver.stopAlarm();
         handler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }

@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
 
+        TestTask.createThreeTasks(getApplicationContext());
+
         setRestrictions();
         setupButtons();
         setupRecyclerView(getAllCrops());
@@ -105,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private void setupButtons(){
 
         btnRecord.setOnClickListener(v -> {
+            TestTask.listAllCrops(getApplicationContext());
             TestTask.listAllTasks(getApplicationContext());
         });
 
@@ -140,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             String cropName = etUpdateCropName.getText().toString().trim();
             if(Validator.isCropNameValid(cropName)){
                 cropDbHelper.updateCropName(selectedCropId, cropName);
-                taskDatabaseHelper.deleteAllTaskByCropId(selectedCropId);
                 etUpdateCropName.setText("");
                 setupRecyclerView(getAllCrops());
                 hideUpdateMenu();
@@ -149,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         btnConfirmDelete.setOnClickListener(v->{
             cropDbHelper.deleteCropById(selectedCropId);
+            taskDatabaseHelper.deleteAllTaskByCropId(selectedCropId);
+            NotifierService.stopService(getApplicationContext());
+            NotifierService.startService(getApplicationContext());
             setupRecyclerView(getAllCrops());
             hideDeletePrompt();
         });
