@@ -31,7 +31,7 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public void navigateToAddCropSelectionForTaskCreation(View view) {
-        Intent intent = new Intent(AddActivity.this, CropSelectionForTaskActivity.class);
+        Intent intent = new Intent(AddActivity.this, CropSelectionForAddingNewTaskActivity.class);
         startActivity(intent);
         finish();
     }

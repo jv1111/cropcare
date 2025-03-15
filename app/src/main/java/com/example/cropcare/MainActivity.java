@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
 
-        //TODO List of task ui and update task
-        //TODO DELETE TASK BY ID
         setRestrictions();
         setupButtons();
         setupRecyclerView(getAllCrops());

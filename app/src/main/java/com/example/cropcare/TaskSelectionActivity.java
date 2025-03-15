@@ -1,5 +1,6 @@
 package com.example.cropcare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -96,7 +97,10 @@ public class TaskSelectionActivity extends AppCompatActivity implements AdapterT
 
     @Override
     public void onSelect(int taskId, String taskNote, int repeatEvery, long startTime, long endTime) {
-
+        Intent intent = new Intent(TaskSelectionActivity.this, TaskViewActivity.class);
+        intent.putExtra("id", taskId);
+        startActivity(intent);
+        //TODO DO THE UPDATE
     }
 
     @Override

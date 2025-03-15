@@ -19,16 +19,19 @@
         android:theme="@style/Theme.CropCare"
         tools:targetApi="31">
         <activity
+            android:name=".TaskViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddNewCoFarmerActivity"
             android:exported="false" />
         <activity
-            android:name=".TaskActivity"
+            android:name=".TaskFinishActivity"
             android:exported="false" />
         <activity
             android:name=".TaskSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".CropSelectionForTaskActivity"
+            android:name=".CropSelectionForAddingNewTaskActivity"
             android:exported="false" />
         <activity
             android:name=".AddNewTaskActivity"

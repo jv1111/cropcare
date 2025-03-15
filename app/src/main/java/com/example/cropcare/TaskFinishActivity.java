@@ -19,7 +19,7 @@ import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.receivers.AlarmReceiver;
 import com.example.cropcare.services.NotifierService;
 
-public class TaskActivity extends AppCompatActivity {
+public class TaskFinishActivity extends AppCompatActivity {
 
     private TaskModel task;
     private boolean isTaskEnded;

@@ -18,7 +18,7 @@ import com.example.cropcare.recycler.AdapterCropSelection;
 
 import java.util.List;
 
-public class CropSelectionForTaskActivity extends AppCompatActivity implements AdapterCropSelection.IOnSelection {
+public class CropSelectionForAddingNewTaskActivity extends AppCompatActivity implements AdapterCropSelection.IOnSelection {
 
     private CropDatabaseHelper cropDbHelper;
     private String TAG = "myTag";
@@ -58,7 +58,7 @@ public class CropSelectionForTaskActivity extends AppCompatActivity implements A
     @Override
     public void onSelect(String date, String cropName, int id) {
         Log.i("myTag", "selected new: " + cropName);
-        Intent intent = new Intent(CropSelectionForTaskActivity.this, AddNewTaskActivity.class);
+        Intent intent = new Intent(CropSelectionForAddingNewTaskActivity.this, AddNewTaskActivity.class);
         intent.putExtra("date", date);
         intent.putExtra("cropName", cropName);
         intent.putExtra("id", id);

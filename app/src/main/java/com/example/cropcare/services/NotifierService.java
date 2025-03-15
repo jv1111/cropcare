@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -19,12 +18,9 @@ import com.example.cropcare.Auth;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.MainActivity;
 import com.example.cropcare.Model.TaskModel;
-import com.example.cropcare.TaskActivity;
+import com.example.cropcare.TaskFinishActivity;
 import com.example.cropcare.helper.TimeHelper;
 import com.example.cropcare.receivers.AlarmReceiver;
-
-import java.util.Comparator;
-import java.util.List;
 
 public class NotifierService extends Service {
     private TaskDatabaseHelper taskDatabaseHelper;
@@ -83,7 +79,7 @@ public class NotifierService extends Service {
 
     private void updateNotification(String text, int currentTaskId) {
 
-        Intent notificationIntent = new Intent(this, TaskActivity.class);
+        Intent notificationIntent = new Intent(this, TaskFinishActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         //setup for tap function
