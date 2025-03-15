@@ -60,4 +60,12 @@ public class Validator {
     }
 
 
+    public static boolean isPasswordValid(String password, Context context) {
+        if (password == null || password.isEmpty() || password.length() < 3) {
+            Toast.makeText(context, "Password must be at least 3 characters long and not empty.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -19,6 +19,9 @@
         android:theme="@style/Theme.CropCare"
         tools:targetApi="31">
         <activity
+            android:name=".UpdatePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".TaskViewActivity"
             android:exported="false" />
         <activity

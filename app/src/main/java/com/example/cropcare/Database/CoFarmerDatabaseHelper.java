@@ -83,4 +83,13 @@ public class CoFarmerDatabaseHelper {
         db.delete(CoFarmerTable.TABLE_NAME, null, null);
         db.close();
     }
+
+    public void updatePassword(int coFarmerId, String newPassword) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CoFarmerTable.COL_PASSWORD, newPassword);
+        db.update(CoFarmerTable.TABLE_NAME, values, CoFarmerTable.COL_ID + " = ?", new String[]{String.valueOf(coFarmerId)});
+        db.close();
+    }
+
 }

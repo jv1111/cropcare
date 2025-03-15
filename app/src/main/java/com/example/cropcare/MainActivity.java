@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,6 +28,7 @@ import com.example.cropcare.helper.Permissions;
 import com.example.cropcare.helper.Validator;
 import com.example.cropcare.recycler.AdapterCrops;
 import com.example.cropcare.services.NotifierService;
+import com.example.cropcare.test.TestTask;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private TaskDatabaseHelper taskDatabaseHelper;
     private String TAG = "myTag";
     private Button btnRecord, btnAdd, btnCancelUpdate, btnConfirmUpdate, btnConfirmDelete, btnCancelDelete;
-    private Button btnLogout, btnAddCoFarmer;
+    private Button btnLogout, btnAddCoFarmer, btnUpdatePassword;
     private RecyclerView rv;
     private AdapterCrops adapter;
     private TextView tvUsername;
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         etUpdateCropName = findViewById(R.id.etUpdateCropName);
         btnConfirmDelete = findViewById(R.id.btnConfirmDelete);
         btnCancelDelete = findViewById(R.id.btnCancelDelete);
+        btnUpdatePassword = findViewById(R.id.btnUpdatePassword);
         layoutDelete = findViewById(R.id.layoutDelete);
         layoutDeletePanel = findViewById(R.id.layoutDeletePanel);
 
@@ -161,6 +162,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             hideDeletePrompt();
         });
 
+        btnUpdatePassword.setOnClickListener(v->{
+            navigateToUpdatePassword();
+        });
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -190,6 +195,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private void navigateToAddNew() {
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(intent);
+    }
+
+    private void navigateToUpdatePassword(){
+        startActivity(new Intent(MainActivity.this, UpdatePasswordActivity.class));
     }
 
     private void showUpdateMenu(){

@@ -77,4 +77,13 @@ public class UserDatabaseHelper {
         db.close();
         return isValid;
     }
+
+    public void updatePassword(int userId, String newPassword) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(UserTable.COL_PASSWORD, newPassword);
+        db.update(UserTable.TABLE_NAME, values, UserTable.COL_ID + " = ?", new String[]{String.valueOf(userId)});
+        db.close();
+    }
+
 }
