@@ -119,11 +119,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         });
 
         btnMenu.setOnClickListener(v->{
-            layoutMenu.setVisibility(View.VISIBLE);
+            showSettingsMenu();
         });
 
         layoutMenu.setOnClickListener(v->{
-            layoutMenu.setVisibility(View.GONE);
+            hideSettingsMenu();
         });
 
         btnAddCoFarmer.setOnClickListener(v->{
@@ -166,6 +166,16 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             navigateToUpdatePassword();
         });
 
+    }
+
+    private void hideSettingsMenu() {
+        layoutMenu.clearAnimation();
+        layoutMenu.setVisibility(View.GONE);
+    }
+
+    private void showSettingsMenu() {
+        layoutMenu.setVisibility(View.VISIBLE);
+        AnimationHelper.popupLinear(layoutMenu, this);
     }
 
     @SuppressLint("NotifyDataSetChanged")
