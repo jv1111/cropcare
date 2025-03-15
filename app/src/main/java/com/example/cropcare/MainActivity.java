@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             String cropName = etUpdateCropName.getText().toString().trim();
             if(Validator.isCropNameValid(cropName)){
                 cropDbHelper.updateCropName(selectedCropId, cropName);
+                taskDatabaseHelper.updateTaskCropName(selectedCropId, cropName);
+                //TODO TEST THIS
                 etUpdateCropName.setText("");
                 setupRecyclerView(getAllCrops());
                 hideUpdateMenu();

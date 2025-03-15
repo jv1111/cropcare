@@ -288,16 +288,15 @@ public class TaskDatabaseHelper {
         db.close();
     }
 
-    public void updateTaskCropName(int taskId, String cropName) {
+    public void updateTaskCropName(int cropId, String cropName) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TaskTable.COL_CROP_NAME, cropName);
-
-        int rowsAffected = db.update(TaskTable.TABLE_NAME, values, TaskTable.COL_ID + " = ?", new String[]{String.valueOf(taskId)});
+        int rowsAffected = db.update(TaskTable.TABLE_NAME, values, TaskTable.COL_CROP_ID + " = ?", new String[]{String.valueOf(cropId)});
         if (rowsAffected > 0) {
-            Log.i("myTag", "Crop name updated successfully for Task ID: " + taskId);
+            Log.i("myTag", "Crop name updated successfully for Task ID: " + cropId);
         } else {
-            Log.e("myTag", "Failed to update crop name for Task ID: " + taskId);
+            Log.e("myTag", "Failed to update crop name for Task ID: " + cropId);
         }
         db.close();
     }
