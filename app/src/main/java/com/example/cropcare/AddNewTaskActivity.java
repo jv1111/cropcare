@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.helper.TimeHelper;
+import com.example.cropcare.helper.Validator;
 import com.example.cropcare.services.NotifierService;
 
 import java.util.Calendar;
@@ -84,6 +85,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 Toast.makeText(this, "Start Date Millis: " + millis, Toast.LENGTH_SHORT).show();
             });
         });
+
         btnEndDate.setOnClickListener(v -> {
             TimeHelper.showDateTimePicker(this, millis -> {
                 endTime = millis;
@@ -92,29 +94,39 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 Toast.makeText(this, "Start Date Millis: " + millis, Toast.LENGTH_SHORT).show();
             });
         });
+
         btnOk.setOnClickListener(v -> {
-            if (isRepeat) {
-                String repeatEveryDaysStr = etRepeatEvery.getText().toString().trim();
-                if(repeatEveryDaysStr.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "All parameters must be valid and not empty!", Toast.LENGTH_SHORT).show();
-                }else{
-                    addTask(cropName, cropId, note, startTime, endTime, isRepeat, repeatEveryDays);
-                }
-            }else{
+
+            String note = etTaskNote.getText().toString().trim();
+            boolean isRepeat = cbRepeat.isChecked();
+            String repeatDaysStr = etRepeatEvery.getText().toString().trim();
+            int repeatEveryDays = repeatDaysStr.isEmpty() ? 0 : Integer.parseInt(repeatDaysStr);
+
+            if (!Validator.validateTaskInput(this, note, isRepeat, startTime, endTime, repeatEveryDays)) {
+                return;
+            }
+
+            if(!isRepeat){
+                repeatEveryDays = 1;
                 endTime = startTime;
-                addTask(cropName, cropId, note, startTime, endTime, isRepeat, 1);
             }
+
+            taskDatabaseHelper.addNewTask(cropName, cropId, Auth.userId, note, startTime, endTime, isRepeat, repeatEveryDays);
+            NotifierService.stopService(this);
+            NotifierService.startService(this);
+            finish();
+
         });
+
         btnCancel.setOnClickListener(v -> {
-            List<TaskModel> tasks = taskDatabaseHelper.getAllTasks();
-            for (TaskModel task : tasks) {
-                Log.i("TaskList", task.toString());
-            }
+            finish();
         });
+
         cbRepeat.setOnCheckedChangeListener((buttonView, isChecked) ->{
             isRepeat = isChecked;
             setIsRepeatView(isRepeat);
         });
+
         etTaskNote.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -135,27 +147,13 @@ public class AddNewTaskActivity extends AppCompatActivity {
         if(!isRepeat){
             etRepeatEvery.setEnabled(false);
             btnEndDate.setEnabled(false);
-            btnEndDate.setEnabled(false);
             endTime = 0;
             repeatEveryDays = 1;
             tvEndDate.setText("End Date: Not Set");
         }else{
             etRepeatEvery.setEnabled(true);
             btnEndDate.setEnabled(true);
-            btnEndDate.setEnabled(true);
         }
-    }
-
-    private void addTask(String cropName, int cropId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
-        if (cropName == null || cropName.isEmpty() || note == null || note.isEmpty() || startTime <= 0 || endTime <= 0 || repeatEveryDays < 0) {
-            Toast.makeText(this, "All parameters must be valid and not empty!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        taskDatabaseHelper.addNewTask(cropName, cropId, Auth.userId, note, startTime, endTime, isRepeat, repeatEveryDays);
-        Toast.makeText(this, "Task added successfully!", Toast.LENGTH_SHORT).show();
-        NotifierService.stopService(this);
-        NotifierService.startService(this);
-        finish();
     }
 
 }
