@@ -33,5 +33,31 @@ public class Validator {
         return str != null && str.length() >= 3;
     }
 
+    public static boolean validateTaskInput(Context context, String note, boolean isRepeat, long startTime, long endTime, int repeatEveryDays) {
+        if (note.isEmpty()) {
+            Toast.makeText(context, "Note is required!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!isRepeat) {
+            if (startTime <= 0) {
+                Toast.makeText(context, "Start time is required!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } else {
+            if (endTime <= 0) {
+                Toast.makeText(context, "End time is required for repeating tasks!" + endTime, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (repeatEveryDays <= 0) {
+                Toast.makeText(context, "Repeat every days must be greater than 0 for repeating tasks!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
 }

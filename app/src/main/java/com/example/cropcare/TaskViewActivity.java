@@ -1,13 +1,11 @@
 package com.example.cropcare;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.helper.TimeHelper;
+import com.example.cropcare.helper.Validator;
+import com.example.cropcare.services.NotifierService;
 
 public class TaskViewActivity extends AppCompatActivity {
 
@@ -29,10 +29,11 @@ public class TaskViewActivity extends AppCompatActivity {
 
     private TextView tvStartDate, tvEndDate;
     private Button btnSelectStartDate, btnSelectEndDate, btnConfirmEdit;
-    private EditText etTaskNote, etDay;
+    private EditText etTaskNote, etRepeatDay;
     private CheckBox cbRepeat;
 
     private int taskId;
+    private long startTime, endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class TaskViewActivity extends AppCompatActivity {
         btnSelectEndDate = findViewById(R.id.btnSelectEndDate);
         tvEndDate = findViewById(R.id.tvEndDate);
         cbRepeat = findViewById(R.id.cbRepeat);
-        etDay = findViewById(R.id.etDay);
+        etRepeatDay = findViewById(R.id.etRepeatDay);
         btnConfirmEdit = findViewById(R.id.btnConfirmEdit);
         btnCancel = findViewById(R.id.btnCancel);
 
@@ -67,12 +68,13 @@ public class TaskViewActivity extends AppCompatActivity {
 
         taskId = getIntent().getIntExtra("id", -1);
 
-        setupView();
+        setupEditView();
+        setupInfoView();
         setupButtons();
     }
 
     @SuppressLint("SetTextI18n")
-    private void setupView() {
+    private void setupInfoView() {
         TaskModel task = taskDb.getOneTaskById(taskId);
         tvCropName.setText("Crop: " + task.getCropName());
         tvNote.setText("Note: " + task.getNote());
@@ -89,12 +91,60 @@ public class TaskViewActivity extends AppCompatActivity {
         btnEdit.setOnClickListener(v -> motionLayout.transitionToEnd());
         btnCancel.setOnClickListener(v -> motionLayout.transitionToStart());
 
-        /*
+        btnSelectStartDate.setOnClickListener(v->{
+            TimeHelper.showDateTimePicker(this, millis -> {
+                startTime = millis;
+                String date = "Start Date: " + TimeHelper.convertMillisToDateTime(millis);
+                tvStartDate.setText(date);
+            });
+        });
+
+        btnSelectEndDate.setOnClickListener(v->{
+            TimeHelper.showDateTimePicker(this, millis -> {
+                endTime = millis;
+                String date = "End Date: " + TimeHelper.convertMillisToDateTime(millis);
+                tvEndDate.setText(date);
+            });
+        });
+
+        cbRepeat.setOnCheckedChangeListener((buttonView, isChecked) ->{
+            setupEditView();
+        });
+
         btnConfirmEdit.setOnClickListener(v->{
             String note = etTaskNote.getText().toString().trim();
-            taskDb.updateTaskExceptCropName(taskId, note, startTime, endTime, isRepeat, repeatEveryDays);
-        });
-         */
+            boolean isRepeat = cbRepeat.isChecked();
+            String repeatDaysStr = etRepeatDay.getText().toString().trim();
+            int repeatEveryDays = repeatDaysStr.isEmpty() ? 0 : Integer.parseInt(repeatDaysStr);
 
+            if (!Validator.validateTaskInput(this, note, isRepeat, startTime, endTime, repeatEveryDays)) {
+                return;
+            }
+
+            if(!isRepeat){
+                repeatEveryDays = 1;
+                endTime = startTime;
+            }
+
+            taskDb.updateTaskExceptCropName(taskId, note, startTime, endTime, isRepeat, repeatEveryDays);
+            motionLayout.transitionToStart();
+            setupInfoView();
+
+            NotifierService.stopService(this);
+            NotifierService.startService(this);
+        });
+
+    }
+
+    private void setupEditView() {
+        if(!cbRepeat.isChecked()){
+            endTime = 0;
+            tvEndDate.setText("End Date: Not Set");
+            etRepeatDay.setEnabled(false);
+            btnSelectEndDate.setEnabled(false);
+        }else{
+            etRepeatDay.setEnabled(true);
+            btnSelectEndDate.setEnabled(true);
+        }
     }
 }
