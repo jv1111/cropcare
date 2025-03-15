@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,12 @@ public class TaskViewActivity extends AppCompatActivity {
     private MotionLayout motionLayout;
     private Button btnEdit, btnCancel;
     private TaskDatabaseHelper taskDb;
+
+    private TextView tvStartDate, tvEndDate;
+    private Button btnSelectStartDate, btnSelectEndDate, btnConfirmEdit;
+    private EditText etTaskNote, etDay;
+    private CheckBox cbRepeat;
+
     private int taskId;
 
     @Override
@@ -39,12 +47,21 @@ public class TaskViewActivity extends AppCompatActivity {
 
         motionLayout = findViewById(R.id.main);
         btnEdit = findViewById(R.id.btnEdit);
-        btnCancel = findViewById(R.id.btnCancel);
         tvCropName = findViewById(R.id.tvCropName);
         tvNote = findViewById(R.id.tvNote);
         tvStartDateInfo = findViewById(R.id.tvStartDateInfo);
         tvEndDateInfo = findViewById(R.id.tvEndDateInfo);
         tvRepeatEveryInfo = findViewById(R.id.tvRepeatInfo);
+
+        etTaskNote = findViewById(R.id.etTaskNote);
+        btnSelectStartDate = findViewById(R.id.btnSelectStartDate);
+        tvStartDate = findViewById(R.id.tvStartDate);
+        btnSelectEndDate = findViewById(R.id.btnSelectEndDate);
+        tvEndDate = findViewById(R.id.tvEndDate);
+        cbRepeat = findViewById(R.id.cbRepeat);
+        etDay = findViewById(R.id.etDay);
+        btnConfirmEdit = findViewById(R.id.btnConfirmEdit);
+        btnCancel = findViewById(R.id.btnCancel);
 
         taskDb = new TaskDatabaseHelper(this);
 
@@ -71,5 +88,13 @@ public class TaskViewActivity extends AppCompatActivity {
     private void setupButtons() {
         btnEdit.setOnClickListener(v -> motionLayout.transitionToEnd());
         btnCancel.setOnClickListener(v -> motionLayout.transitionToStart());
+
+        /*
+        btnConfirmEdit.setOnClickListener(v->{
+            String note = etTaskNote.getText().toString().trim();
+            taskDb.updateTaskExceptCropName(taskId, note, startTime, endTime, isRepeat, repeatEveryDays);
+        });
+         */
+
     }
 }

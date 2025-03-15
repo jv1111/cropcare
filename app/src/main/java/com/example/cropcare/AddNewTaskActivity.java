@@ -43,10 +43,6 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private boolean isRepeat = false;
     private String note;
 
-    public interface OnDateTimeSelectedListener {
-        void onDateTimeSelected(long millis);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +77,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
     private void setupButtonsFunctions(){
         btnStartDate.setOnClickListener(v -> {
-            showDateTimePicker(millis -> {
+            TimeHelper.showDateTimePicker(this, millis -> {
                 startTime = millis;
                 String date = "Start Date: " + TimeHelper.convertMillisToDateTime(millis);
                 tvStartDate.setText(date);
@@ -89,7 +85,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
             });
         });
         btnEndDate.setOnClickListener(v -> {
-            showDateTimePicker(millis -> {
+            TimeHelper.showDateTimePicker(this, millis -> {
                 endTime = millis;
                 String date = "End Date: " + TimeHelper.convertMillisToDateTime(millis);
                 tvEndDate.setText(date);
@@ -160,42 +156,6 @@ public class AddNewTaskActivity extends AppCompatActivity {
         NotifierService.stopService(this);
         NotifierService.startService(this);
         finish();
-    }
-
-    private void showDatePicker() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-                    Toast.makeText(this, selectedDate, Toast.LENGTH_LONG).show();
-                },
-                year, month, day
-        );
-
-        datePickerDialog.show();
-    }
-
-    private void showDateTimePicker(OnDateTimeSelectedListener listener) {
-        final Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view1, hourOfDay, minute) -> {
-
-                // Convert selected date and time to milliseconds
-                Calendar selectedDateTime = Calendar.getInstance();
-                selectedDateTime.set(year, month, dayOfMonth, hourOfDay, minute, 0);
-                long millis = selectedDateTime.getTimeInMillis();
-
-                listener.onDateTimeSelected(millis); // Pass the millis to the callback
-
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);//start time
-            timePickerDialog.show();
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));//start date
-        datePickerDialog.show();
     }
 
 }

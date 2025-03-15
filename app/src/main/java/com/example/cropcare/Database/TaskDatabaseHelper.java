@@ -269,4 +269,38 @@ public class TaskDatabaseHelper {
         db.close();
         return taskList;
     }
+
+    public void updateTaskExceptCropName(int taskId, String note, long startTime, long endTime, boolean isRepeat, int repeatEveryDays) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(TaskTable.COL_NOTE, note);
+        values.put(TaskTable.COL_START_TIME, startTime);
+        values.put(TaskTable.COL_END_TIME, endTime);
+        values.put(TaskTable.COL_IS_REPEAT, isRepeat ? 1 : 0);
+        values.put(TaskTable.COL_REPEAT_EVERY, repeatEveryDays);
+
+        int rowsAffected = db.update(TaskTable.TABLE_NAME, values, TaskTable.COL_ID + " = ?", new String[]{String.valueOf(taskId)});
+        if (rowsAffected > 0) {
+            Log.i("myTag", "Task updated successfully for Task ID: " + taskId);
+        } else {
+            Log.e("myTag", "Failed to update task for Task ID: " + taskId);
+        }
+        db.close();
+    }
+
+    public void updateTaskCropName(int taskId, String cropName) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(TaskTable.COL_CROP_NAME, cropName);
+
+        int rowsAffected = db.update(TaskTable.TABLE_NAME, values, TaskTable.COL_ID + " = ?", new String[]{String.valueOf(taskId)});
+        if (rowsAffected > 0) {
+            Log.i("myTag", "Crop name updated successfully for Task ID: " + taskId);
+        } else {
+            Log.e("myTag", "Failed to update crop name for Task ID: " + taskId);
+        }
+        db.close();
+    }
+
+
 }
