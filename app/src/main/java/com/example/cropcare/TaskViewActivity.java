@@ -68,9 +68,14 @@ public class TaskViewActivity extends AppCompatActivity {
 
         taskId = getIntent().getIntExtra("id", -1);
 
+        setupRestrictions();
         setupEditView();
         setupInfoView();
         setupButtons();
+    }
+
+    private void setupRestrictions() {
+        btnEdit.setEnabled(Auth.isAdmin);
     }
 
     @SuppressLint("SetTextI18n")

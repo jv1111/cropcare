@@ -10,8 +10,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cropcare.Auth;
 import com.example.cropcare.Model.CropModel;
 import com.example.cropcare.R;
 import com.example.cropcare.helper.TimeHelper;
@@ -61,6 +63,15 @@ public class AdapterCrops extends RecyclerView.Adapter<ViewHolderCrops>{
                 return super.onSingleTapUp(e);
             }
         });
+
+        if(!Auth.isAdmin){
+            holder.btnUpdate.setEnabled(false);
+            holder.btnUpdate.setTextColor(context.getResources().getColor(R.color.disabled));
+
+            holder.btnDelete.setEnabled(false);
+            holder.btnDelete.setTextColor(context.getResources().getColor(R.color.disabled));
+        }
+
 
         holder.btnUpdate.setOnClickListener(v->{
             cb.onUpdate(id, cropName);

@@ -23,4 +23,23 @@
         <item name="strokeWidth">2dp</item>
     </style>
 
+    <style name="DisabledButtonStyleIcon" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/disabled</item>
+        <item name="iconTint">@color/disabled</item>
+        <item name="android:alpha">0.8</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="PrimaryButtonOutline" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/primary</item>
+        <item name="iconTint">@color/primary</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="DangerButtonOutline" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/danger_button</item>
+        <item name="iconTint">@color/danger_button</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
 </resources>

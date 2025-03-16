@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cropcare.Auth;
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.R;
 import com.example.cropcare.helper.TimeHelper;
@@ -58,6 +59,11 @@ public class AdapterTasksSelection extends RecyclerView.Adapter<ViewHolderTasks>
                 return super.onSingleTapUp(e);
             }
         });
+
+        if(!Auth.isAdmin){
+            holder.btnDelete.setEnabled(false);
+            holder.btnDelete.setTextColor(context.getResources().getColor(R.color.disabled));
+        }
 
         holder.btnDelete.setOnClickListener(v ->{
             cb.onDelete(currentTask.getId());

@@ -14,5 +14,7 @@
 
     <color name="primary_items">#E8F5E9</color>
 
+    <color name="disabled">#909090</color>
+
 
 </resources>

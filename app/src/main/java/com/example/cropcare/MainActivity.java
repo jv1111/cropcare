@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private Button btnLogout, btnAddCoFarmer, btnUpdatePassword;
     private RecyclerView rv;
     private AdapterCrops adapter;
-    private TextView tvUsername;
+    private TextView tvUsername, tvAccountType;
     private LocalStorageHelper localStorageHelper;
     private ImageButton btnMenu;
     private LinearLayout layoutMenu, layoutUpdate, layoutUpdatePanel, layoutDelete, layoutDeletePanel;
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private int selectedCropId = -1;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         btnLogout = findViewById(R.id.btnLogout);
         rv = findViewById(R.id.rv);
         tvUsername = findViewById(R.id.tvUsername);
+        tvAccountType = findViewById(R.id.tvAccountType);
         btnMenu = findViewById(R.id.btnMenu);
         layoutMenu = findViewById(R.id.layoutMenu);
         layoutUpdate = findViewById(R.id.layoutUpdate);
@@ -88,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         layoutDeletePanel = findViewById(R.id.layoutDeletePanel);
 
         tvUsername.setText("Welcome, " + Auth.username);
+        tvAccountType.setText("Type: " + (Auth.isAdmin? "Admin" : "Co-Farmer"));
+        //TODO IMPORT EXPORT
 
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private void setRestrictions(){
         if(!Auth.isAdmin){
             btnAdd.setEnabled(false);
+            btnAddCoFarmer.setEnabled(false);
         }
     }
 
@@ -143,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
             if(Validator.isCropNameValid(cropName)){
                 cropDbHelper.updateCropName(selectedCropId, cropName);
                 taskDatabaseHelper.updateTaskCropName(selectedCropId, cropName);
-                //TODO TEST THIS
                 etUpdateCropName.setText("");
                 setupRecyclerView(getAllCrops());
                 hideUpdateMenu();

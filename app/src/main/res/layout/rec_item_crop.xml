@@ -60,21 +60,18 @@
 
         <Button
             android:id="@+id/btnUpdate"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/PrimaryButtonOutline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:text="Update"
-            android:textColor="@color/primary"
-            android:textSize="10sp"
             app:icon="@drawable/baseline_delete_24"
-            app:iconTint="@color/primary"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btnDelete"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/DangerButtonOutline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete"
