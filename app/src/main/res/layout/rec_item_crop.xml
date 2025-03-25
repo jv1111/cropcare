@@ -9,7 +9,7 @@
     app:layoutDescription="@xml/rec_item_crop_scene">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/itemLayoutLabels"
+        android:id="@+id/layoutItemLabel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/shape_rounded_items"

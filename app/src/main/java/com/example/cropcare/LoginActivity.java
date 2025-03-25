@@ -1,28 +1,33 @@
 package com.example.cropcare;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.cropcare.Database.CoFarmerDatabaseHelper;
-import com.example.cropcare.Database.DataBaseHelper;
 import com.example.cropcare.Database.UserDatabaseHelper;
 import com.example.cropcare.Model.CoFarmerModel;
 import com.example.cropcare.Model.UserModel;
+import com.example.cropcare.helper.AnimationHelper;
+import com.example.cropcare.helper.DatabaseBackupHelper;
 import com.example.cropcare.helper.LocalStorageHelper;
-import com.example.cropcare.helper.Validator;
 
-import java.util.List;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
@@ -34,7 +39,10 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etUsername;
     private EditText etPassword;
 
-    private Button btnLogin, btnRegister;
+    private Button btnLogin, btnRegister, btnCancelDataShare, btnImport, btnExport;
+    private ImageButton btnDataSharing;
+
+    private LinearLayout layoutDataSharing;
 
     private LocalStorageHelper localStorage;
 
@@ -53,6 +61,11 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
+        btnDataSharing = findViewById(R.id.btnDataSharing);
+        btnCancelDataShare = findViewById(R.id.btnCancelDataShare);
+        layoutDataSharing = findViewById(R.id.layoutDataSharing);
+        btnImport = findViewById(R.id.btnImport);
+        btnExport = findViewById(R.id.btnExport);
 
         localStorage = new LocalStorageHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
@@ -69,6 +82,28 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(v -> {
             navigateToRegister();
         });
+        btnDataSharing.setOnClickListener(v->{
+            showDataSharingMenu();
+        });
+        btnCancelDataShare.setOnClickListener(v -> {
+            hideDataSharingMenu();
+        });
+        btnExport.setOnClickListener(v->{
+            DatabaseBackupHelper.exportDatabase(this);
+        });
+        btnImport.setOnClickListener(v->{
+            DatabaseBackupHelper.openFilePicker(this, pickFileAndImportDb);
+        });
+    }
+
+    private void hideDataSharingMenu() {
+        layoutDataSharing.clearAnimation();
+        layoutDataSharing.setVisibility(View.GONE);
+    }
+
+    private void showDataSharingMenu() {
+        AnimationHelper.popupLinear(layoutDataSharing, getApplicationContext());
+        layoutDataSharing.setVisibility(View.VISIBLE);
     }
 
     public void checkLogin(){
@@ -133,5 +168,17 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
+
+    private final ActivityResultLauncher<Intent> pickFileAndImportDb = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri fileUri = result.getData().getData();
+                    if (fileUri != null) {
+                        DatabaseBackupHelper.importDatabase(this, fileUri);
+                    }
+                }
+            }
+    );
 
 }
