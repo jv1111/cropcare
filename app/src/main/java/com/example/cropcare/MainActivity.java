@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         tvUsername.setText("Welcome, " + Auth.username);
         tvAccountType.setText("Type: " + (Auth.isAdmin? "Admin" : "Co-Farmer"));
-        //TODO IMPORT EXPORT
+        //TODO GENERATE A DEMO METHODS
 
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
@@ -171,6 +171,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         btnUpdatePassword.setOnClickListener(v->{
             navigateToUpdatePassword();
         });
+
+    }
+
+    private void showDemoSelection(){
 
     }
 

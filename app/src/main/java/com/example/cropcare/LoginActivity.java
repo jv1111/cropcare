@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etUsername;
     private EditText etPassword;
 
-    private Button btnLogin, btnRegister, btnCancelDataShare, btnImport, btnExport;
+    private Button btnLogin, btnRegister, btnCancelDataShare, btnImport, btnExport, btnDemo;
     private ImageButton btnDataSharing;
 
     private LinearLayout layoutDataSharing;
@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
+        btnDemo = findViewById(R.id.btnDemo);
         btnDataSharing = findViewById(R.id.btnDataSharing);
         btnCancelDataShare = findViewById(R.id.btnCancelDataShare);
         layoutDataSharing = findViewById(R.id.layoutDataSharing);
@@ -94,6 +95,9 @@ public class LoginActivity extends AppCompatActivity {
         btnImport.setOnClickListener(v->{
             DatabaseBackupHelper.openFilePicker(this, pickFileAndImportDb);
         });
+        btnDemo.setOnClickListener(v->{
+            loginDemo();
+        });
     }
 
     private void hideDataSharingMenu() {
@@ -108,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void checkLogin(){
         if(localStorage.getUserId() != -1){
-            Auth.setUserData(localStorage.getUserId(), localStorage.getUsername(), localStorage.isAdmin(), localStorage.getParentId());
+            Auth.setUserData(localStorage.getUserId(), localStorage.getUsername(), localStorage.isAdmin(), localStorage.getParentId(), false);
             navigateToHomePage();
         }
     }
@@ -123,6 +127,12 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show();
     }
 
+    public void loginDemo(){
+        localStorage.saveUserData(0, "demo", true, null, true);
+        Auth.setUserData(0, "demo", true, null, true);
+        navigateToHomePage();
+    }
+
     private boolean attemptUserLogin(String username, String password) {
         Log.i("myTag: ", "attempt user");
         UserModel user = userDatabaseHelper.getUserByUsername(username);
@@ -133,8 +143,8 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
 
-        localStorage.saveUserData(user.getId(), user.getUsername(), user.isAdmin(), null);
-        Auth.setUserData(user.getId(), user.getUsername(), user.isAdmin(), null);
+        localStorage.saveUserData(user.getId(), user.getUsername(), user.isAdmin(), null, false);
+        Auth.setUserData(user.getId(), user.getUsername(), user.isAdmin(), null, false);
 
         Toast.makeText(this, "Logged in admin", Toast.LENGTH_LONG).show();
         navigateToHomePage();
@@ -151,8 +161,8 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
 
-        localStorage.saveUserData(coFarmer.getId(), coFarmer.getUsername(), false, coFarmer.getParentUserId());
-        Auth.setUserData(coFarmer.getId(), coFarmer.getUsername(), false, coFarmer.getParentUserId());
+        localStorage.saveUserData(coFarmer.getId(), coFarmer.getUsername(), false, coFarmer.getParentUserId(), false);
+        Auth.setUserData(coFarmer.getId(), coFarmer.getUsername(), false, coFarmer.getParentUserId(), false);
         Toast.makeText(this, "Logged in co farmer", Toast.LENGTH_LONG).show();
         navigateToHomePage();
         return true;
@@ -176,6 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                     Uri fileUri = result.getData().getData();
                     if (fileUri != null) {
                         DatabaseBackupHelper.importDatabase(this, fileUri);
+                        hideDataSharingMenu();
                     }
                 }
             }

@@ -101,7 +101,7 @@
         android:focusable="true"
         android:gravity="center"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <LinearLayout
             android:layout_width="200dp"
@@ -125,6 +125,14 @@
                 android:layout_height="wrap_content"
                 android:text="Export"
                 app:icon="@drawable/baseline_call_made_24" />
+
+            <Button
+                android:id="@+id/btnDemo"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Demo"
+                app:icon="@drawable/baseline_phonelink_ring_24" />
 
             <Button
                 android:id="@+id/btnCancelDataShare"

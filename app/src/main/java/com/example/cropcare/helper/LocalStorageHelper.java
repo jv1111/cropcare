@@ -26,13 +26,17 @@ public class LocalStorageHelper {
         }
     }
 
-    public void saveUserData(int userId, String username, boolean isAdmin, Integer parentId) {
+    public void saveUserData(int userId, String username, boolean isAdmin, Integer parentId, boolean isDemo) {
         securePrefs.edit()
                 .putInt("userId", userId)
                 .putString("username", username)
                 .putBoolean("isAdmin", isAdmin)
                 .putInt("parentId", parentId != null ? parentId : -1)
                 .apply();
+    }
+
+    public void saveDemoData(){
+
     }
 
     public int getParentId(){

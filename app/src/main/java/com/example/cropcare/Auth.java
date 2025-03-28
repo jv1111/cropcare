@@ -7,12 +7,14 @@ public class Auth {
     public static String username;
     public static boolean isAdmin;
     public static Integer parentId;
+    public static boolean isDemo;
 
-    public static void setUserData(int userId, String username, boolean isAdmin, Integer parentId) {
+    public static void setUserData(int userId, String username, boolean isAdmin, Integer parentId, boolean isDemo) {
         Auth.userId = userId;
         Auth.username = username;
         Auth.isAdmin = isAdmin;
         Auth.parentId = parentId;
+        Auth.isDemo = isDemo;
     }
 
     public static void printUserInfo() {
