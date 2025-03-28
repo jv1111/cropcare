@@ -128,7 +128,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginDemo(){
-        localStorage.saveUserData(0, "demo", true, null, true);
         Auth.setUserData(0, "demo", true, null, true);
         navigateToHomePage();
     }

@@ -35,9 +35,6 @@ public class LocalStorageHelper {
                 .apply();
     }
 
-    public void saveDemoData(){
-
-    }
 
     public int getParentId(){
         return securePrefs.getInt("parentId", -1);

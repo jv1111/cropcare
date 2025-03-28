@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         setRestrictions();
         setupButtons();
+        demoFunction();
         setupRecyclerView(getAllCrops());
     }
 
@@ -174,8 +176,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     }
 
-    private void showDemoSelection(){
-
+    private void demoFunction(){
+        if(Auth.isDemo){
+            TestTask.deleteAllCrops(this);
+            TestTask.createThreeTasks(this);
+        }
     }
 
     private void hideSettingsMenu() {

@@ -93,9 +93,9 @@ public class TestTask {
         long currentMillis = System.currentTimeMillis();
         long endMillis = currentMillis + (30L * 24 * 60 * 60 * 1000); // 30 days from now
 
-        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 1", currentMillis + 10000, endMillis, true, 2);
-        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 2", currentMillis + 20000, endMillis, true, 1);
-        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 3", currentMillis + 30000, endMillis, true, 3);
+        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 1", currentMillis + 20000, endMillis, true, 2);
+        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 2", currentMillis + 60000, endMillis, true, 1);
+        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 3", currentMillis + 100000, endMillis, true, 3);
 
         Log.i("myTag", "Three tasks created successfully.");
     }
