@@ -64,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         localStorageHelper = new LocalStorageHelper(this);
 
-        Permissions.checkNotification(this);
-        Permissions.setAlarmPermission(this);
-
         cropDbHelper = new CropDatabaseHelper(this);
         taskDatabaseHelper = new TaskDatabaseHelper(this);
 
@@ -92,15 +89,14 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
         tvUsername.setText("Welcome, " + Auth.username);
         tvAccountType.setText("Type: " + (Auth.isAdmin? "Admin" : "Co-Farmer"));
-        //TODO GENERATE A DEMO METHODS
-
-        if(NotifierService.isRunning) NotifierService.stopService(this);
-        NotifierService.startService(this);
 
         setRestrictions();
         setupButtons();
         demoFunction();
         setupRecyclerView(getAllCrops());
+
+        if(NotifierService.isRunning) NotifierService.stopService(this);
+        NotifierService.startService(this);
     }
 
     private void setRestrictions(){
@@ -178,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
 
     private void demoFunction(){
         if(Auth.isDemo){
-            TestTask.deleteAllCrops(this);
             TestTask.createThreeTasks(this);
         }
     }

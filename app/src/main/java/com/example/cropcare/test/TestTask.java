@@ -85,19 +85,20 @@ public class TestTask {
 
         List<CropModel> cropList = cdh.getAllCrops(userId);
         if (cropList.isEmpty()) {
-            cdh.addNewCrop("Default Crop", userId);
+            cdh.addNewCrop("Potatoes", userId);
             cropList = cdh.getAllCrops(userId);
+
+            CropModel crop = cropList.get(0);
+            long currentMillis = System.currentTimeMillis();
+            long endMillis = currentMillis + (30L * 24 * 60 * 60 * 1000); // 30 days from now
+
+            tdh.addNewTask(crop.getName(), crop.getId(), userId, "Applying fertilizer to enhance growth", currentMillis + 20000, endMillis, true, 2);
+            tdh.addNewTask(crop.getName(), crop.getId(), userId, "Watering the potato plants", currentMillis + 60000, endMillis, true, 1);
+            tdh.addNewTask(crop.getName(), crop.getId(), userId, "Hilling soil around the potato stems", currentMillis + 100000, endMillis, true, 3);
+
+            Log.i("myTag", "Three tasks created successfully.");
         }
 
-        CropModel crop = cropList.get(0);
-        long currentMillis = System.currentTimeMillis();
-        long endMillis = currentMillis + (30L * 24 * 60 * 60 * 1000); // 30 days from now
-
-        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 1", currentMillis + 20000, endMillis, true, 2);
-        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 2", currentMillis + 60000, endMillis, true, 1);
-        tdh.addNewTask(crop.getName(), crop.getId(), userId, "Task 3", currentMillis + 100000, endMillis, true, 3);
-
-        Log.i("myTag", "Three tasks created successfully.");
     }
 
 }

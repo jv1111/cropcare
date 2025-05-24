@@ -27,6 +27,7 @@ import com.example.cropcare.Model.UserModel;
 import com.example.cropcare.helper.AnimationHelper;
 import com.example.cropcare.helper.DatabaseBackupHelper;
 import com.example.cropcare.helper.LocalStorageHelper;
+import com.example.cropcare.helper.Permissions;
 
 import java.util.Objects;
 
@@ -67,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
         layoutDataSharing = findViewById(R.id.layoutDataSharing);
         btnImport = findViewById(R.id.btnImport);
         btnExport = findViewById(R.id.btnExport);
+
+        Permissions.checkNotification(this);
+        Permissions.setAlarmPermission(this);
 
         localStorage = new LocalStorageHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
