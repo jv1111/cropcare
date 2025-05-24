@@ -77,7 +77,7 @@ public class NotifierService extends Service {
         startForeground(NOTIFICATION_ID, notification);
     }
 
-    private void updateNotification(String text, int currentTaskId) {
+    private void updateNotification(String text, int currentTaskId, int currentCropId, int userId) {
 
         Intent notificationIntent = new Intent(this, TaskFinishActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -86,6 +86,8 @@ public class NotifierService extends Service {
         if (isRinging) { // Make it clickable only if isRinging is true
             notificationIntent.putExtra("from_notification", true);
             notificationIntent.putExtra("taskId", currentTaskId);
+            notificationIntent.putExtra("cropId", currentCropId);
+            notificationIntent.putExtra("userId", userId);
             pendingIntent = PendingIntent.getActivity(
                     this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
@@ -114,7 +116,7 @@ public class NotifierService extends Service {
         TaskModel upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.isAdmin ? Auth.userId : Auth.parentId);
 
         if (upcomingTask == null) {
-            updateNotification("There is no upcoming task", 0);
+            updateNotification("There is no upcoming task", 0, 0,0);
             return;
         }
 
@@ -122,6 +124,8 @@ public class NotifierService extends Service {
         String cropName = upcomingTask.getCropName();
         String note = upcomingTask.getNote();
         int taskId = upcomingTask.getId();
+        int cropId = upcomingTask.getCropId();
+        int userId = upcomingTask.getUserId();
 
         AlarmReceiver.setAlarmMillis(this, startTime);
 
@@ -143,7 +147,7 @@ public class NotifierService extends Service {
                         }
                     }
 
-                    updateNotification(notificationText, taskId);
+                    updateNotification(notificationText, taskId, cropId, userId);
                     handler.postDelayed(this, 1000);
                 }
             }

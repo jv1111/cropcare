@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.cropcare.Database.Tables.CoFarmerTable;
 import com.example.cropcare.Database.Tables.CropTable;
 import com.example.cropcare.Database.Tables.IDatabaseTable;
+import com.example.cropcare.Database.Tables.RecordsTable;
 import com.example.cropcare.Database.Tables.TaskTable;
 import com.example.cropcare.Database.Tables.UserTable;
 
@@ -24,7 +25,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             new UserTable(),
             new CropTable(),
             new TaskTable(),
-            new CoFarmerTable()
+            new CoFarmerTable(),
+            new RecordsTable()
     );
 
     // Private constructor to prevent instantiation

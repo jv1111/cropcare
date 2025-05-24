@@ -29,6 +29,7 @@ import com.example.cropcare.helper.Permissions;
 import com.example.cropcare.helper.Validator;
 import com.example.cropcare.recycler.AdapterCrops;
 import com.example.cropcare.services.NotifierService;
+import com.example.cropcare.test.TestRecords;
 import com.example.cropcare.test.TestTask;
 
 import java.util.List;
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         setupButtons();
         demoFunction();
         setupRecyclerView(getAllCrops());
+
+        TestRecords.listAllRecords(this);
 
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.cropcare.Database.DataBaseHelper;
+import com.example.cropcare.Database.RecordsDatabaseHelper;
 import com.example.cropcare.Database.TaskDatabaseHelper;
 import com.example.cropcare.Model.TaskModel;
 import com.example.cropcare.helper.TimeHelper;
@@ -27,6 +30,11 @@ public class TaskFinishActivity extends AppCompatActivity {
     private TaskModel task;
     private boolean isTaskEnded;
     private int taskId = -1;
+    private int cropId = -1;
+    private int userId = -1;
+    private EditText etNote;
+
+    private RecordsDatabaseHelper recDb;
 
     private TextView tvCropname, tvDate, tvNote;
     private Button btnOk, btnGood, btnBad, btnDead;
@@ -47,19 +55,22 @@ public class TaskFinishActivity extends AppCompatActivity {
         });
         db = new TaskDatabaseHelper(this);
 
-        taskId = getTaskIdFromIntent();
+        getIdsFromIntent();
         task = db.getOneTaskById(taskId);
         isTaskEnded = db.isTaskEnded(taskId);
 
         tvCropname = findViewById(R.id.tvCropName);
         tvDate = findViewById(R.id.tvDate);
         tvNote = findViewById(R.id.tvNote);
+        etNote = findViewById(R.id.etNote);
         btnOk = findViewById(R.id.btnOk);
 
         promptBackgroundLayout = findViewById(R.id.qBackgroundLayout);
         btnGood = findViewById(R.id.btnGood);
         btnBad = findViewById(R.id.btnBad);
         btnDead = findViewById(R.id.btnDead);
+
+        recDb = new RecordsDatabaseHelper(this);
 
         AlarmReceiver.stopAlarm();
         displayData();
@@ -72,14 +83,36 @@ public class TaskFinishActivity extends AppCompatActivity {
         promptBackgroundLayout.setOnClickListener(v -> hidePrompt());
 
         btnGood.setOnClickListener(v->{
+            addRecord("Good");
             finish();
         });
         btnBad.setOnClickListener(v->{
+            addRecord("Bad");
             finish();
         });
         btnDead.setOnClickListener(v->{
+            addRecord("Dead");
+            db.deleteOneTask(taskId);
             finish();
         });
+    }
+
+
+    private void addRecord(String status) {
+        if (userId == -1 || cropId == -1) {
+            Toast.makeText(this, "Invalid user or crop ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String note = tvNote.getText().toString();
+        note = note + "\n" + etNote.getText().toString();
+        long time = System.currentTimeMillis();
+
+        if (recDb.addNewRecord(userId, cropId, taskId, note, status, time)) {
+            Toast.makeText(this, "Record saved successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Failed to save record", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void showPrompt() {
@@ -112,14 +145,14 @@ public class TaskFinishActivity extends AppCompatActivity {
         }
     }
 
-    private int getTaskIdFromIntent(){
-        int taskId = -1;
+    private void getIdsFromIntent() {
         Intent intent = getIntent();
         if (intent.getBooleanExtra("from_notification", false)) {
+            cropId = intent.getIntExtra("cropId", -1);
             taskId = intent.getIntExtra("taskId", -1);
-            Toast.makeText(this, "Task ID: " + taskId, Toast.LENGTH_LONG).show();
+            userId = intent.getIntExtra("userId", -1);
+            Toast.makeText(this, "Crop ID: " + cropId + ", Task ID: " + taskId + ", UserId: " + userId, Toast.LENGTH_LONG).show();
         }
-        return taskId;
     }
 
 }
