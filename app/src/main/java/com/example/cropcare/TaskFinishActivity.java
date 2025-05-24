@@ -3,7 +3,9 @@ package com.example.cropcare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,9 @@ public class TaskFinishActivity extends AppCompatActivity {
     private int taskId = -1;
 
     private TextView tvCropname, tvDate, tvNote;
-    private Button btnOk;
+    private Button btnOk, btnGood, btnBad, btnDead;
+
+    private RelativeLayout promptBackgroundLayout;
 
     TaskDatabaseHelper db;
 
@@ -52,6 +56,11 @@ public class TaskFinishActivity extends AppCompatActivity {
         tvNote = findViewById(R.id.tvNote);
         btnOk = findViewById(R.id.btnOk);
 
+        promptBackgroundLayout = findViewById(R.id.qBackgroundLayout);
+        btnGood = findViewById(R.id.btnGood);
+        btnBad = findViewById(R.id.btnBad);
+        btnDead = findViewById(R.id.btnDead);
+
         AlarmReceiver.stopAlarm();
         displayData();
         setTaskStatus();
@@ -59,10 +68,28 @@ public class TaskFinishActivity extends AppCompatActivity {
         NotifierService.stopService(this);
         NotifierService.startService(this);
 
-        btnOk.setOnClickListener(v-> {
+        btnOk.setOnClickListener(v -> showPrompt());
+        promptBackgroundLayout.setOnClickListener(v -> hidePrompt());
+
+        btnGood.setOnClickListener(v->{
+            finish();
+        });
+        btnBad.setOnClickListener(v->{
+            finish();
+        });
+        btnDead.setOnClickListener(v->{
             finish();
         });
     }
+
+    private void showPrompt() {
+        promptBackgroundLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hidePrompt() {
+        promptBackgroundLayout.setVisibility(View.GONE);
+    }
+
 
     private void setTaskStatus(){
         if(!isTaskEnded){
