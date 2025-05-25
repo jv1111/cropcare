@@ -4,15 +4,17 @@ public class RecordModel {
     private int id;
     private int userId;
     private int cropId;
+    private String cropName;
     private int taskId;
     private String note;
     private String status;
     private long time;
 
-    public RecordModel(int id, int userId, int cropId, int taskId, String note, String status, long time) {
+    public RecordModel(int id, int userId, int cropId, String cropName, int taskId, String note, String status, long time) {
         this.id = id;
         this.userId = userId;
         this.cropId = cropId;
+        this.cropName = cropName;
         this.taskId = taskId;
         this.note = note;
         this.status = status;
@@ -41,6 +43,14 @@ public class RecordModel {
 
     public void setCropId(int cropId) {
         this.cropId = cropId;
+    }
+
+    public String getCropName() {
+        return cropName;
+    }
+
+    public void setCropName(String cropName) {
+        this.cropName = cropName;
     }
 
     public int getTaskId() {
@@ -81,6 +91,7 @@ public class RecordModel {
                 "id=" + id +
                 ", userId=" + userId +
                 ", cropId=" + cropId +
+                ", cropName='" + cropName + '\'' +
                 ", taskId=" + taskId +
                 ", note='" + note + '\'' +
                 ", status='" + status + '\'' +

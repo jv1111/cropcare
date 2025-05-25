@@ -77,7 +77,7 @@ public class NotifierService extends Service {
         startForeground(NOTIFICATION_ID, notification);
     }
 
-    private void updateNotification(String text, int currentTaskId, int currentCropId, int userId) {
+    private void updateNotification(String text, int currentTaskId, int currentCropId, int userId, String cropName) {
 
         Intent notificationIntent = new Intent(this, TaskFinishActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -88,6 +88,7 @@ public class NotifierService extends Service {
             notificationIntent.putExtra("taskId", currentTaskId);
             notificationIntent.putExtra("cropId", currentCropId);
             notificationIntent.putExtra("userId", userId);
+            notificationIntent.putExtra("cropName", cropName);
             pendingIntent = PendingIntent.getActivity(
                     this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
@@ -116,7 +117,7 @@ public class NotifierService extends Service {
         TaskModel upcomingTask = taskDatabaseHelper.getFirstUpcomingTask(Auth.isAdmin ? Auth.userId : Auth.parentId);
 
         if (upcomingTask == null) {
-            updateNotification("There is no upcoming task", 0, 0,0);
+            updateNotification("There is no upcoming task", 0, 0,0, "");
             return;
         }
 
@@ -147,7 +148,7 @@ public class NotifierService extends Service {
                         }
                     }
 
-                    updateNotification(notificationText, taskId, cropId, userId);
+                    updateNotification(notificationText, taskId, cropId, userId, cropName);
                     handler.postDelayed(this, 1000);
                 }
             }

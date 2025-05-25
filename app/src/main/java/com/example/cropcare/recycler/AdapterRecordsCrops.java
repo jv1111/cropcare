@@ -16,46 +16,31 @@ import com.example.cropcare.helper.TimeHelper;
 
 import java.util.List;
 
-public class AdapterRecordsCrops extends RecyclerView.Adapter<ViewHolderCrops> {
+public class AdapterRecordsCrops extends RecyclerView.Adapter<ViewHolderRecordsCrops> {
 
     List<RecordModel> recordList;
-    private ICropListControlCB cb;
-    private Context context;
 
-    public interface ICropListControlCB {
-        void onSelect(int id, int cropId);
-    }
-
-    public AdapterRecordsCrops(Context context, List<RecordModel> recordList, ICropListControlCB cb) {
-        this.context = context;
+    public AdapterRecordsCrops(List<RecordModel> recordList) {
         this.recordList = recordList;
-        this.cb = cb;
     }
 
     @NonNull
     @Override
-    public ViewHolderCrops onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolderCrops(LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_item_crop_rec, parent, false));
+    public ViewHolderRecordsCrops onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ViewHolderRecordsCrops(LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_item_crop_rec, parent, false));
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderCrops holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolderRecordsCrops holder, int position) {
         RecordModel record = recordList.get(position);
         String date = "Date: " + TimeHelper.convertMillisToDateTime(record.getTime());
 
-        holder.tvCropName.setText("Crop ID: " + record.getCropId());
+        holder.tvCropName.setText("Crop name: " + record.getCropName());
         holder.tvCropDate.setText(date);
+        holder.tvStatus.setText("Status: " + record.getStatus());
+        holder.tvNote.setText("Note: " + record.getNote());
 
-        GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                cb.onSelect(record.getId(), record.getCropId());
-                return true;
-            }
-        });
-
-        holder.itemView.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
     }
 
     @Override

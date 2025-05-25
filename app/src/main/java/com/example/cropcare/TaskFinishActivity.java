@@ -32,6 +32,7 @@ public class TaskFinishActivity extends AppCompatActivity {
     private int taskId = -1;
     private int cropId = -1;
     private int userId = -1;
+    private String cropName = "";
     private EditText etNote;
 
     private RecordsDatabaseHelper recDb;
@@ -107,7 +108,7 @@ public class TaskFinishActivity extends AppCompatActivity {
         note = note + "\n" + etNote.getText().toString();
         long time = System.currentTimeMillis();
 
-        if (recDb.addNewRecord(userId, cropId, taskId, note, status, time)) {
+        if (recDb.addNewRecord(userId, cropId, cropName, taskId, note, status, time)) {
             Toast.makeText(this, "Record saved successfully", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Failed to save record", Toast.LENGTH_SHORT).show();
@@ -151,6 +152,7 @@ public class TaskFinishActivity extends AppCompatActivity {
             cropId = intent.getIntExtra("cropId", -1);
             taskId = intent.getIntExtra("taskId", -1);
             userId = intent.getIntExtra("userId", -1);
+            cropName = intent.getStringExtra("cropName");
             Toast.makeText(this, "Crop ID: " + cropId + ", Task ID: " + taskId + ", UserId: " + userId, Toast.LENGTH_LONG).show();
         }
     }
