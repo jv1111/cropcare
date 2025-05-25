@@ -79,26 +79,46 @@ public class TestTask {
     }
 
     public static void createThreeTasks(Context context) {
-        TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
         CropDatabaseHelper cdh = new CropDatabaseHelper(context);
         int userId = Auth.isAdmin ? Auth.userId : Auth.parentId;
 
         List<CropModel> cropList = cdh.getAllCrops(userId);
         if (cropList.isEmpty()) {
             cdh.addNewCrop("Potatoes", userId);
-            cropList = cdh.getAllCrops(userId);
+            cdh.addNewCrop("Tomatoes", userId);
+            cdh.addNewCrop("Carrots", userId);
 
-            CropModel crop = cropList.get(0);
+            cropList = cdh.getAllCrops(userId);  // Refresh the list to get IDs
+            CropModel potatoes = null, tomatoes = null;
+            for (CropModel crop : cropList) {
+                if ("Potatoes".equals(crop.getName())) {
+                    potatoes = crop;
+                } else if ("Tomatoes".equals(crop.getName())) {
+                    tomatoes = crop;
+                }
+            }
+
+            TaskDatabaseHelper tdh = new TaskDatabaseHelper(context);
             long currentMillis = System.currentTimeMillis();
-            long endMillis = currentMillis + (30L * 24 * 60 * 60 * 1000); // 30 days from now
 
-            tdh.addNewTask(crop.getName(), crop.getId(), userId, "Applying fertilizer to enhance growth", currentMillis + 20000, endMillis, true, 2);
-            tdh.addNewTask(crop.getName(), crop.getId(), userId, "Watering the potato plants", currentMillis + 60000, endMillis, true, 1);
-            tdh.addNewTask(crop.getName(), crop.getId(), userId, "Hilling soil around the potato stems", currentMillis + 100000, endMillis, true, 3);
+            if (potatoes != null) {
+                long nextDayMillis = currentMillis + 24L * 60 * 60 * 1000;
+                tdh.addNewTask(potatoes.getName(), potatoes.getId(), userId,
+                        "First task for Potatoes", currentMillis + 20000, currentMillis + 2 * 60 * 60 * 1000, true, 1);
+                tdh.addNewTask(potatoes.getName(), potatoes.getId(), userId,
+                        "Second task for Potatoes", nextDayMillis, nextDayMillis + 2 * 60 * 60 * 1000, true, 2);
+            }
 
-            Log.i("myTag", "Three tasks created successfully.");
+            if (tomatoes != null) {
+                long nextWeekMillis = currentMillis + 7L * 24 * 60 * 60 * 1000;
+                tdh.addNewTask(tomatoes.getName(), tomatoes.getId(), userId,
+                        "First task for Tomatoes", currentMillis + 40000, currentMillis + 2 * 60 * 60 * 1000, true, 1);
+                tdh.addNewTask(tomatoes.getName(), tomatoes.getId(), userId,
+                        "Second task for Tomatoes", nextWeekMillis, nextWeekMillis + 2 * 60 * 60 * 1000, true, 2);
+            }
+
+            Log.i("myTag", "Three crops created with tasks for Potatoes and Tomatoes.");
         }
-
     }
 
 }
