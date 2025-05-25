@@ -96,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
         demoFunction();
         setupRecyclerView(getAllCrops());
 
-        TestRecords.listAllRecords(this);
-
         if(NotifierService.isRunning) NotifierService.stopService(this);
         NotifierService.startService(this);
     }
@@ -112,8 +110,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCrops.ICro
     private void setupButtons(){
 
         btnRecord.setOnClickListener(v -> {
-            TestTask.listAllCrops(getApplicationContext());
-            TestTask.listAllTasks(getApplicationContext());
+            startActivity(new Intent(MainActivity.this, RecordsCropSelection.class));
         });
 
         btnLogout.setOnClickListener(v -> {
